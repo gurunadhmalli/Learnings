@@ -16,6 +16,9 @@ from langchain_core.output_parsers import StrOutputParser
 load_dotenv()
 
 
+from langchain.chat_models import init_chat_model
+
+
 def demo_basic_chain():
     """
     Demonstrates a basic LCEL (LangChain Expression Language) pipeline.
@@ -133,7 +136,7 @@ def demo_basic_batch_chain():
 
 def demo_steam():
     prompt = ChatPromptTemplate.from_template("you are an helpful assitnact write about this topic{question}")
-    model = ChatGoogleGenerativeAI(model = "gemini-3.5-flash",tempareture = 100.0,max_tokens = 1500)
+    model = ChatGoogleGenerativeAI(model = "gemini-3.5-flash",tempareture = 1.0,max_tokens = 1500)
     parser = StrOutputParser()
 
     chain = prompt | model | parser
@@ -146,7 +149,79 @@ def demo_steam():
 
 
 
+
+
+
+def demo_input_output_schema():
+    # Create a prompt template with one input variable: {question}
+    # The user will provide a value for "question", and it will be
+    # inserted into the template before sending it to the model.
+    prompt = ChatPromptTemplate.from_template(
+        "You are a helpful assistant. Write about this topic: {question}"
+    )
+
+    # Initialize the Google Gemini language model.
+    # - model: specifies which Gemini model to use.
+    # - temperature: controls creativity (higher = more random).
+    # - max_tokens: maximum number of tokens the model can generate.
+    model = ChatGoogleGenerativeAI(
+        model="gemini-3.5-flash",
+        temperature=1.0,      # (Correct spelling: temperature)
+        max_tokens=1500
+    )
+
+    # Output parser converts the raw LLM response into a plain string.
+    parser = StrOutputParser()
+
+    # Create a LangChain Expression Language (LCEL) pipeline.
+    # Flow: User Input --> Prompt --> Gemini Model --> String Parser
+    chain = prompt | model | parser
+
+    # Generate the JSON schema that describes the expected input format.
+    # Since the prompt contains {question}, the input schema will expect
+    # a field named "question" of type string.
+    input_schema = chain.input_schema.model_json_schema()
+
+    # Generate the JSON schema that describes the output format.
+    # Because we use StrOutputParser(), the final output is simply a string.
+    output_schema = chain.output_schema.model_json_schema()
+
+    # Print the input schema.
+    print(f"This is the input schema:\n{input_schema}")
+
+    # Print the output schema.
+    print(f"\nThis is the output schema:\n{output_schema}")
+
+
+def excercise_chain():
+    prompt = ChatPromptTemplate.from_template("you are an helpful assitnact take the product name {p_name} and audience {audience} return just tag line")
+    model = ChatGoogleGenerativeAI(model = "gemini-3.5-flash",tempareture = 1.0,max_tokens = 1500)
+    parser = StrOutputParser()
+
+
+    chain = prompt | model | parser
+
+    result = chain.invoke({"p_name":"AI Course","audience":"developers"})
+    print(result)
+    return chain
+
+
+def demo_init_chat():
+    prompt = ChatPromptTemplate.from_template("you are an helpful assitnacta ans the qnns {question}")
+    model = init_chat_model(model_provider = "google_genai",model = "gemini-3.5-flash",tempareture = 1.0,max_tokens = 1500)
+    parser = StrOutputParser()
+
+    chain = prompt|model|parser
+
+    result = chain.invoke({"question":"what is the python?"})
+
+    print(result)
+    return chain
+    
+
+
+
 # This block executes only when this Python file
 # is run directly, not when it is imported as a module.
-# if __name__ == "__main__":
-print(demo_steam())
+if __name__ == "__main__":
+    demo_init_chat()
