@@ -94,7 +94,7 @@ def pdf_loader(pdf_path: str):
 
     print(f"Loaded {len(documents)} document(s) from PDF")
     for i, doc in enumerate(documents):
-        print(f"Document {i+1} Content Preview: {doc.page_content[:100]}...")
+        print(f"Document {i+1} Content Preview: {doc.page_content[:1000]}...")
         print(f"Metadata: {doc.metadata}")
 
 
