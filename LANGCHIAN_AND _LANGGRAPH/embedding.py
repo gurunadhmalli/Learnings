@@ -2,6 +2,7 @@ from langchain_cohere import CohereEmbeddings
 from dotenv import load_dotenv
 import numpy as np
 
+
 # Load environment variables from .env file
 # This is where your COHERE_API_KEY is typically stored.
 load_dotenv()
@@ -290,6 +291,236 @@ def similarity_search():
 #
 # ==========================================================
 
+
+
+def embed_caching():
+
+    # =====================================================
+    # CACHE-BACKED EMBEDDINGS
+    # =====================================================
+    #
+    # Problem:
+    #
+    # Every time we call:
+    #
+    # embeddings.embed_documents(...)
+    #
+    # LangChain sends a request to Cohere.
+    #
+    # Example:
+    #
+    # "my name is gurunadh"
+    #
+    # First Call
+    #      ↓
+    # Cohere API
+    #      ↓
+    # Embedding Generated
+    #
+    #
+    # Second Call (same text)
+    #      ↓
+    # Cohere API Again
+    #      ↓
+    # Same Embedding Generated Again
+    #
+    # This wastes:
+    #
+    # - API Cost
+    # - Network Time
+    # - Latency
+    #
+    # Solution:
+    #
+    # Cache the embedding once and reuse it.
+    #
+    # =====================================================
+
+    from langchain_classic.embeddings.cache import CacheBackedEmbeddings
+
+    # LocalFileStore is used to store cached embeddings
+    # on disk instead of memory.
+    from langchain_classic.storage import LocalFileStore
+
+    import tempfile
+
+    # =====================================================
+    # CREATE TEMPORARY DIRECTORY
+    # =====================================================
+    #
+    # tempfile.TemporaryDirectory()
+    #
+    # Creates a temporary folder like:
+    #
+    # /tmp/abc123/
+    #
+    # The folder is automatically deleted
+    # when execution finishes.
+    #
+    # =====================================================
+
+    with tempfile.TemporaryDirectory() as tempdir:
+
+        # =================================================
+        # CREATE CACHE STORAGE
+        # =================================================
+        #
+        # LocalFileStore stores embeddings as files.
+        #
+        # Example:
+        #
+        # cache/
+        # ├── hash_1
+        # ├── hash_2
+        # ├── hash_3
+        #
+        # =================================================
+
+        store = LocalFileStore(tempdir)
+
+        # =================================================
+        # CREATE CACHE WRAPPER
+        # =================================================
+        #
+        # CacheBackedEmbeddings wraps your original
+        # embedding model.
+        #
+        # Flow:
+        #
+        # Text
+        #   ↓
+        # Check Cache
+        #   ↓
+        # Found?
+        #   ↓
+        # YES → Return Cached Embedding
+        #
+        # NO
+        #   ↓
+        # Call Cohere API
+        #   ↓
+        # Store Result
+        #   ↓
+        # Return Embedding
+        #
+        # =================================================
+
+        cached_embeddings = CacheBackedEmbeddings.from_bytes_store(
+
+            # Original embedding model
+            underlying_embeddings=embeddings,
+
+            # Cache storage location
+            document_embedding_cache=store,
+
+            # Namespace separates different caches
+            #
+            # Example:
+            #
+            # namespace="project_a"
+            # namespace="project_b"
+            #
+            # Prevents collisions.
+            #
+            namespace="exercise"
+        )
+
+        text = "my name is gurunadh"
+
+        # =================================================
+        # FIRST EMBEDDING REQUEST
+        # =================================================
+        #
+        # Cache is empty.
+        #
+        # Flow:
+        #
+        # Text
+        #   ↓
+        # Cache Miss
+        #   ↓
+        # Cohere API Call
+        #   ↓
+        # Store Result in Cache
+        #   ↓
+        # Return Embedding
+        #
+        # =================================================
+
+        print("First API Call")
+
+        # IMPORTANT:
+        #
+        # embed_documents() expects a list
+        #
+        # Correct:
+        #
+        # ["my name is gurunadh"]
+        #
+        # Not:
+        #
+        # "my name is gurunadh"
+        #
+        vector1 = cached_embeddings.embed_documents(
+            [text]
+        )
+
+        # =================================================
+        # SECOND REQUEST
+        # =================================================
+        #
+        # Same text.
+        #
+        # Flow:
+        #
+        # Text
+        #   ↓
+        # Cache Lookup
+        #   ↓
+        # Cache Hit
+        #   ↓
+        # Return Cached Embedding
+        #
+        # No Cohere API Call
+        #
+        # Much Faster
+        #
+        # =================================================
+
+        print("Second Cache Call")
+
+        vector2 = cached_embeddings.embed_documents(
+            [text]
+        )
+
+        # =================================================
+        # VERIFY RESULTS
+        # =================================================
+        #
+        # np.allclose(...)
+        #
+        # Checks whether two vectors are
+        # numerically equal.
+        #
+        # Returns:
+        #
+        # True
+        # False
+        #
+        # =================================================
+
+        print("\nVerify Both Embeddings Are Same")
+
+        print(
+            np.allclose(
+                vector1[0],
+                vector2[0]
+            )
+        )
+
+
+
+
 if __name__ == "__main__":
 
     # Learn single text embedding
@@ -299,4 +530,5 @@ if __name__ == "__main__":
     # basic_batch_embeddings()
 
     # Learn retrieval using cosine similarity
-    similarity_search()
+    # similarity_search()
+    embed_caching()
