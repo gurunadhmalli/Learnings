@@ -11,7 +11,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 
 from langchain_core.output_parsers import StrOutputParser
-
+from pydantic import BaseModel,Field
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -130,5 +130,146 @@ and if you don't know the answer, just say "I don't know."""
 
 
 
+def demo_with_resource():
+
+    vectore_store = create_kb()
+
+    retriver = vectore_store.as_retriever(
+        search_type = "similarity",
+        search_kwargs = {"k":2}
+    )
+
+    prompt = ChatPromptTemplate.from_template(
+        """
+Answer the question based only on the following context:
+
+{context}
+
+Question: {question}
+
+Answer:
+
+
+Make sure to answer in a concise manner, 
+and if you don't know the answer, just say "I don't know.and also include the source where do get this ans"""
+    )
+
+
+    def format_with_docs(docs):
+        formatted = []
+        for i,doc in enumerate(docs):
+
+            source = doc.metadata.get("source", "unknown")
+            formatted.append(f"[{i+1}] {source}:\n{doc.page_content}")
+        return "\n\n".join(formatted)
+    
+
+    rag_chain = (
+        {"context":retriver|format_with_docs,"question":RunnablePassthrough()}
+        | prompt
+        | llm
+        | StrOutputParser()
+    )
+
+
+    print("RAG with Sources:\n")
+    answer = rag_chain.invoke("What are the core components of LangChain?")
+    print(f"Q: What are the core components?\n")
+    print(f"A: {answer}")
+
+
+def demo_rag_with_fallback():
+
+    vectorstore = create_kb()
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 2})
+
+    prompt = ChatPromptTemplate.from_template(
+        """
+Answer the question based ONLY on the following context.
+If the answer is not in the context, respond with: "I don't have information about that in my knowledge base."
+
+Context:
+{context}
+
+Question: {question}
+
+Answer:"""
+    )
+
+    def format_docs(docs):
+        return "\n\n".join(doc.page_content for doc in docs)
+
+    rag_chain = (
+        {"context": retriever | format_docs, "question": RunnablePassthrough()}
+        | prompt
+        | llm
+        | StrOutputParser()
+    )
+
+    print("RAG with Fallback:\n")
+
+    questions = [
+        "What is the pricing for LangSmith?",  # In knowledge base
+        "What is the stock price of OpenAI?",  # Not in knowledge base
+        "How do I deploy LangChain to AWS?",  # Not in knowledge base
+    ]
+
+    for q in questions:
+        answer = rag_chain.invoke(q)
+        print(f"Q: {q}")
+        print(f"A: {answer}\n")
+
+
+def demo_structured_rag():
+    """RAG with structured output."""
+
+    vectorstore = create_kb()
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
+
+    class RAGResponse(BaseModel):
+        """Structured RAG response."""
+
+        answer: str = Field(description="The answer to the question")
+        confidence: str = Field(description="high, medium, or low")
+        sources_used: list[str] = Field(description="List of sources referenced")
+        follow_up: str = Field(description="Suggested follow-up question")
+
+    structured_llm = llm.with_structured_output(RAGResponse)
+
+    prompt = ChatPromptTemplate.from_template(
+        """
+Based on the context below, answer the question.
+
+Context:
+{context}
+
+Question: {question}
+
+Provide a structured response."""
+    )
+
+    def format_docs(docs):
+        return "\n\n".join(
+            f"[{doc.metadata.get('source', 'unknown')}]: {doc.page_content}"
+            for doc in docs
+        )
+
+    rag_chain = (
+        {"context": retriever | format_docs, "question": RunnablePassthrough()}
+        | prompt
+        | structured_llm
+    )
+    print("Structured RAG Demo:\n")
+    result = rag_chain.invoke("What is LangGraph?")
+
+    print(f"Answer: {result.answer}")
+    print(f"Confidence: {result.confidence}")
+    print(f"Sources: {result.sources_used}")
+    print(f"Follow-up: {result.follow_up}")
+
+
 if __name__ == "__main__":
-    demo_basic_rag()
+    # demo_basic_rag()
+    # demo_with_resource()
+    # demo_rag_with_fallback()
+    demo_structured_rag()
