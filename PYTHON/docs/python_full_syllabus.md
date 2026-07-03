@@ -6,18 +6,29 @@ A complete, topic-by-topic curriculum for mastering Python: from absolute basics
 
 ## 0. Setup & Tooling
 
-- Installing Python (CPython, pyenv, conda)
+> 📄 Full deep-dive companion doc: [`00_setup_and_tooling.md`](00_setup_and_tooling.md) — every topic below explained in detail with diagrams and code.
+
+- Installing Python (CPython, pyenv/pyenv-win, conda/miniconda)
+- Verifying an install (`python --version`, `pip --version`, `where`/`which python`)
 - Python versions (2 vs 3, version differences, EOL policy)
-- `python` vs `python3` vs `py` launcher
+- `python` vs `python3` vs `py` launcher (and Windows PATH resolution order)
+- Interpreter command-line flags (`-m`, `-c`, `-i`, `-O`, `-B`, `-S`, `-I`)
 - Virtual environments: `venv`, `virtualenv`, `conda env`
+  - How `activate`/`deactivate` scripts modify `PATH` and `VIRTUAL_ENV`
 - Package managers: `pip`, `pipx`, `poetry`, `uv`, `conda`
+- `pip` fundamentals: `install`, `uninstall`, `list`, `show`, `freeze`, `install -U`,
+  `install --user`, editable installs (`pip install -e .`), installing from git/local path/wheel
 - `requirements.txt` vs `pyproject.toml` (PEP 518, PEP 621)
+- `pip` configuration files (`pip.conf`/`pip.ini`), private/internal package indices, proxies
 - Interactive shells: default REPL, `IPython`, `bpython`
-- IDEs/editors: VS Code, PyCharm, Jupyter Notebook/Lab
-- Running scripts: `python file.py`, shebang lines, executable scripts
-- Environment variables (`PYTHONPATH`, `PYTHONDONTWRITEBYTECODE`, etc.)
-- `.pyc` files and `__pycache__`
+- IDEs/editors: VS Code (interpreter selection), PyCharm, Jupyter Notebook/Lab
+- Running scripts: `python file.py`, shebang lines, executable scripts, the `__main__` idiom
+- Environment variables (`PYTHONPATH`, `PYTHONDONTWRITEBYTECODE`, `PYTHONUNBUFFERED`, etc.)
+- `.env` files and `python-dotenv`
+- `.pyc` files and `__pycache__` (bytecode caching mechanics)
 - Python implementations: CPython, PyPy, Jython, IronPython, MicroPython
+- `.gitignore` essentials for Python projects
+- Troubleshooting common setup issues (multiple Python versions, PATH conflicts, SSL/proxy errors)
 
 ---
 
