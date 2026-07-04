@@ -35,109 +35,185 @@ A complete, topic-by-topic curriculum for mastering Python: from absolute basics
 ## 1. Language Fundamentals
 
 ### 1.1 Syntax Basics
+
+> 📄 Full deep-dive companion doc: [`01_1_syntax_basics.md`](01_1_syntax_basics.md) — every topic below explained in depth, with diagrams, bottom-up (memory/OS-level) walkthroughs, and code.
+
 - Indentation and block structure
 - Comments (`#`) and docstrings (`'''`, `"""`)
 - Statements vs expressions
+- Simple vs compound statements (grammar-level distinction)
 - Line continuation (`\`, implicit continuation in brackets)
 - Multiple statements per line (`;`)
 - The `print()` function (sep, end, file, flush)
 - The `input()` function
 - Naming conventions (PEP 8), identifiers, reserved keywords
+- Soft keywords (`match`, `case`, `_`, `type`) vs reserved keywords
 - The `pass`, `...` (Ellipsis) placeholders
+- Source encoding declarations (`# -*- coding: utf-8 -*-`, PEP 263/3120)
+- Adjacent string literal concatenation (`"a" "b"` → `"ab"`)
+- `__future__` imports (syntax/behavior evolution mechanism)
+- Tokenizer basics: physical vs logical lines, how source becomes tokens (`INDENT`/`DEDENT`, etc.)
 
 ### 1.2 Variables & Data Types
+
+> 📄 Full deep-dive companion doc: [`01_2_variables_and_data_types.md`](01_2_variables_and_data_types.md) — every topic below explained in depth, with diagrams, bottom-up (memory/CPython-level) walkthroughs, and code.
+
+- Names vs. objects: variables as labels bound to objects (not boxes holding values); `id()` and object identity
 - Dynamic typing, variable binding vs assignment
+- CPython identity caching: small-integer cache (`-5..256`), string interning, and why relying on `is` for equality is a trap
 - `None`, `NoneType`
-- Booleans (`True`, `False`), truthy/falsy values
+- Booleans (`True`, `False`), truthy/falsy values, `bool` as a subclass of `int` (`True == 1`)
 - Numeric types: `int`, `float`, `complex`
   - Integer literals (binary, octal, hex, underscores in literals)
-  - Float precision, `decimal.Decimal`, `fractions.Fraction`
   - Arbitrary precision integers
+  - Floating-point representation pitfalls (IEEE-754, `0.1 + 0.2 != 0.3`, `float('inf')`, `float('nan')`)
+  - Float precision fixes: `decimal.Decimal`, `fractions.Fraction`
 - Strings (`str`) — see section 3
 - Type checking: `type()`, `isinstance()`, `issubclass()`
 - Type conversion/casting (`int()`, `str()`, `float()`, `bool()`, etc.)
 - Mutable vs immutable types
-- Variable scope basics (local, global, nonlocal — deep dive in 4.5)
-- Multiple assignment, chained assignment, tuple unpacking
+- The `del` statement (unbinding a name vs deleting an object) and reference counting basics (`sys.getrefcount`, `sys.getsizeof` — full GC internals in section 20)
+- Variable scope basics (local, global, nonlocal — deep dive in 3.2)
+- Multiple assignment, chained assignment, tuple unpacking, extended/star unpacking (`a, *rest = ...`)
 - Augmented assignment operators (`+=`, `-=`, etc.)
 - The walrus operator `:=` (assignment expressions, PEP 572)
+- Variable annotations (PEP 526: `x: int = 5`, `__annotations__`) — not enforced at runtime
 - Constants (naming convention, `typing.Final`)
 
 ### 1.3 Operators
-- Arithmetic operators (`+ - * / // % **`)
+
+> 📄 Full deep-dive companion doc: [`01_3_operators.md`](01_3_operators.md) — every topic below explained in depth, with diagrams, bottom-up (bytecode/CPython-dispatch) walkthroughs, and code.
+
+- Arithmetic operators (`+ - * / // % ** @`), including the matrix multiplication operator `@` (PEP 465)
+- Unary operators (`-x`, `+x`, `~x`)
+- Floor division & modulo sign semantics with negative operands (`-7 // 2 == -4`, `-7 % 2 == 1` — differs from C)
 - Comparison operators (`== != > < >= <=`)
+- Chained comparisons (`a < b < c` means `a < b and b < c`, with `b` evaluated only once)
 - Logical operators (`and`, `or`, `not`) and short-circuit evaluation
 - Bitwise operators (`& | ^ ~ << >>`)
 - Identity operators (`is`, `is not`) vs equality (`==`)
 - Membership operators (`in`, `not in`)
 - Operator precedence and associativity
-- Operator overloading (link to dunder methods, section 6.4)
+- Operator overloading (link to dunder methods, section 4.4)
 
 ### 1.4 Control Flow
+
+> 📄 Full deep-dive companion doc: [`01_4_control_flow.md`](01_4_control_flow.md) — every topic below explained in depth, with diagrams, bottom-up (bytecode-jump-level) walkthroughs, and code.
+
 - `if` / `elif` / `else`
 - Conditional expressions (ternary: `x if cond else y`)
 - `while` loops, `else` clause on loops
 - `for` loops, iterating over sequences
-- `range()` deep dive
+- How `for` actually works under the hood: the hidden `iter()`/`next()`/`StopIteration` protocol call (full iterator-protocol deep dive in 3.5)
+- `range()` deep dive (a lazy, O(1)-memory sequence, not a pre-built list)
+- Common iteration idioms: `enumerate()`, `zip()`, `reversed()`, unpacking while iterating (`for k, v in d.items()`)
 - `break`, `continue`, loop `else`
-- Nested loops and labeled-loop alternatives (using flags/functions)
+- Nested loops and labeled-loop alternatives (using flags/functions) — Python has no `goto`/labeled `break` at all
+- Loop variable scope leakage — loop variables are **not** block-scoped; they remain readable (and keep their last value) in the enclosing scope after the loop ends
 - Structural Pattern Matching: `match` / `case` (PEP 634, Python 3.10+)
   - Literal patterns, capture patterns, wildcard `_`
   - Sequence patterns, mapping patterns
-  - Class patterns, guards (`if`), OR patterns (`|`)
+  - Class patterns, `__match_args__` (how positional class patterns are resolved), guards (`if`), OR patterns (`|`)
 
 ---
 
 ## 2. Data Structures (Built-in)
 
 ### 2.1 Lists
-- Creation, indexing, slicing (`[start:stop:step]`)
+
+> 📄 Full deep-dive companion doc: [`02_1_lists.md`](02_1_lists.md) — every topic below explained in depth, with diagrams, bottom-up (memory/CPython-level) walkthroughs, and code.
+
+- Creation, indexing, slicing (`[start:stop:step]`), negative indexing
 - Mutability, list methods (`append`, `extend`, `insert`, `remove`, `pop`, `clear`, `sort`, `reverse`, `copy`, `index`, `count`)
-- List comprehensions (basic, nested, conditional)
+- Slice assignment (`lst[1:3] = [...]`) — can grow/shrink the list, not just overwrite
+- List comprehensions (basic, nested, conditional) — and their own implicit scope/frame
 - Shallow vs deep copy (`copy.copy`, `copy.deepcopy`)
-- Sorting: `sorted()` vs `.sort()`, `key=`, `reverse=`
+- List multiplication (`[x] * n`) and the shared-inner-list aliasing pitfall (`[[0]*3]*3`)
+- Sorting: `sorted()` vs `.sort()`, `key=`, `reverse=`, stability (Timsort)
 - List as stack/queue (and why `collections.deque` is better for queues)
+- Big-O awareness: amortized O(1) `append` vs O(n) `insert(0, ...)`/`pop(0)`, O(n) membership (`in`) and search
+- Gotchas: mutating a list while iterating over it, lexicographic comparison (`[1,2] < [1,3]`), `clear()` vs rebinding to `[]`
 
 ### 2.2 Tuples
+
+> 📄 Full deep-dive companion doc: [`02_2_tuples.md`](02_2_tuples.md) — every topic below explained in depth, with diagrams, bottom-up (memory/CPython-level) walkthroughs, and code.
+
 - Creation, immutability, packing/unpacking
 - Single-element tuple gotcha
+- Indexing and slicing (mechanically like lists, but slicing returns a tuple)
+- Shallow immutability — the tuple's own slots are frozen, but a mutable element it contains (e.g. a nested list) can still be mutated
+- Minimal method set (`count`, `index` only) and no in-place operators (`+=`/`*=` always build a new tuple)
+- Hashability requirement — a tuple is hashable (usable as a dict key/set member) only if every element it contains is hashable
 - Named tuples (`collections.namedtuple`, `typing.NamedTuple`)
 - Tuple vs list use cases
+- Multiple return values from functions are just tuple packing/unpacking
 
 ### 2.3 Dictionaries
-- Creation, key-value semantics, hashability requirement for keys
+
+> 📄 Full deep-dive companion doc: [`02_3_dictionaries.md`](02_3_dictionaries.md) — every topic below explained in depth, with diagrams, bottom-up (memory/CPython-level) walkthroughs, and code.
+
+- Creation, key-value semantics, hashability requirement for keys (and the hash/`__eq__` contract)
+- CPython dict internals: hash table + separate insertion-ordered compact array, open addressing, load factor & resizing, average O(1) vs worst-case O(n), hash randomization (`PYTHONHASHSEED`) against hash-flooding
 - Dict methods (`get`, `setdefault`, `update`, `pop`, `popitem`, `keys`, `values`, `items`)
+- `d[key]` (raises `KeyError`) vs `.get()` (returns a default) vs `del d[key]` vs `.pop()`
+- Dictionary view objects (`.keys()`/`.values()`/`.items()`) are live/dynamic, not copies, and `keys()`/`items()` support set-like operations (`&`, `|`, `-`)
+- Mutating a dict's size while iterating over it raises `RuntimeError` (contrast with a list's silent skip bug)
+- `dict.fromkeys()`, building a dict from `zip(keys, values)`
+- `popitem()`'s LIFO order (Python 3.7+ ordering guarantee)
 - Dict comprehensions
-- Merging dicts (`|`, `|=`, `**` unpacking, `update`)
+- Merging dicts (`|`, `|=`, `**` unpacking, `update`) and right-hand/later-key precedence
 - Ordered nature of dicts (insertion order, Python 3.7+ guarantee)
+- `setdefault` vs `collections.defaultdict` — same end result, different mechanism
 - `collections.OrderedDict`, `collections.defaultdict`, `collections.Counter`
+- `types.MappingProxyType` — a read-only view onto a dict
 - Nested dictionaries
 
 ### 2.4 Sets
-- Creation, uniqueness, hashability
-- Set operations (union, intersection, difference, symmetric difference)
-- Set methods (`add`, `remove`, `discard`, `pop`, `update`)
-- Frozensets
+
+> 📄 Full deep-dive companion doc: [`02_4_sets.md`](02_4_sets.md) — every topic below explained in depth, with diagrams, bottom-up (memory/CPython-level) walkthroughs, and code.
+
+- Creation, uniqueness, hashability requirement for elements — the empty-set gotcha (`{}` is a dict, use `set()`)
+- CPython set internals: a hash table like `dict` but keys-only (no values) — average O(1) `add`/`remove`/membership testing
+- Sets are unordered — no insertion-order guarantee, unlike `dict` (Python 3.7+)
+- Set operations (union, intersection, difference, symmetric difference) — operators (`|`, `&`, `-`, `^`) vs methods (`.union()`, etc.) and why only the methods accept arbitrary iterables
+- In-place set operators/methods (`|=`, `&=`, `-=`, `^=`, `.update()`, `.intersection_update()`, etc.)
+- Set methods (`add`, `remove`, `discard`, `pop`, `update`) — `remove` (raises `KeyError`) vs `discard` (silent no-op) vs `pop` (removes an arbitrary element, no LIFO guarantee)
+- Subset/superset comparisons (`<`, `<=`, `>`, `>=`), `isdisjoint()`
+- Frozensets — the hashable, immutable set variant (can itself be a set element or dict key)
 - Set comprehensions
+- Practical idioms: fast membership testing, `set(lst)` for dedup (order not preserved) vs `dict.fromkeys(lst)` for order-preserving dedup
 
 ### 2.5 Strings (Deep Dive)
-- Immutability implications
+
+> 📄 Full deep-dive companion doc: [`02_5_strings.md`](02_5_strings.md) — every topic below explained in depth, with diagrams, bottom-up (memory/CPython-level) walkthroughs, and code.
+
+- CPython's flexible string representation (PEP 393) — strings are stored as the narrowest fixed-width form (Latin-1/UCS-2/UCS-4) that fits their widest character, not one-size-fits-all
+- Immutability implications — every "mutating-looking" method returns a *new* string object; nothing is changed in place
+- Literal forms & escape sequences (`\n`, `\t`, `\\`, `\uXXXX`, `\N{...}`), single/double/triple-quoted strings, quote-escaping
+- Indexing and slicing (`[start:stop:step]`, negative indices) — mechanically like lists, but always returns a new string
+- Membership (`in`) as substring search, and lexicographic string comparison
+- String iteration is by Unicode code point, not by "visual character"/grapheme cluster (`len()` counts code points)
 - String methods (`split`, `join`, `strip`, `replace`, `find`, `format`, `startswith`, `endswith`, `casefold`, etc. — full method survey)
-- String formatting: `%`-formatting, `.format()`, f-strings (PEP 498), f-string debugging (`f"{x=}"`)
+- String formatting: `%`-formatting, `.format()` and the format-spec mini-language (`{:>10,.2f}`), f-strings (PEP 498), f-string debugging (`f"{x=}"`)
 - Raw strings (`r"..."`), byte strings (`b"..."`), f-strings combined with raw
-- Unicode, encoding/decoding (`encode()`, `decode()`, UTF-8/16/32, `chr()`, `ord()`)
-- String interning
+- Concatenation performance: why `s += x` in a loop is O(n²) (immutability forces a full reallocation each time) vs `''.join()` being O(n)
+- Unicode, encoding/decoding (`encode()`, `decode()`, UTF-8/16/32, `chr()`, `ord()`), `UnicodeDecodeError`/`UnicodeEncodeError`
+- Unicode normalization gotcha (`unicodedata.normalize`, NFC/NFD, combining characters — why two "equal-looking" strings can compare unequal)
+- String interning and cached hashing — automatic interning of identifier-like literals, `sys.intern()`, and why immutability lets a string safely cache its own hash
 - `str` vs `bytes` vs `bytearray`
 - Text wrapping/alignment (`textwrap`, `str.ljust/rjust/center`)
 
 ### 2.6 Other Built-in Collections
-- `range` objects (lazy sequences)
-- `bytearray`, `memoryview`
-- Arrays (`array` module) vs lists
-- `collections.deque` (O(1) append/pop both ends)
-- `collections.ChainMap`
-- `heapq` (priority queues/heaps)
-- `bisect` (binary search / sorted insertion)
+
+> 📄 Full deep-dive companion doc: [`02_6_other_collections.md`](02_6_other_collections.md) — every topic below explained in depth, with diagrams, bottom-up (memory/CPython-level) walkthroughs, and code.
+
+- `range` objects (lazy sequences, O(1) memory regardless of length — full derivation in 1.4)
+- `bytearray`, `memoryview` — the buffer protocol (PEP 3118) and zero-copy slicing/mutation over binary data, vs. a `bytes`/`bytearray` slice which always copies
+- Arrays (`array` module) vs lists — type codes (`'b'`, `'i'`, `'f'`, `'d'`, etc.) and why `array` stores raw, densely-packed C values inline instead of a list's array of pointers to separately-allocated boxed objects
+- `collections.deque` (O(1) append/pop both ends) — the block-based doubly-linked-list internals that make this possible (vs. a list's O(n) `insert(0, ...)`), `maxlen` for a bounded ring buffer/sliding window, `.rotate()`
+- `collections.ChainMap` — layered mapping lookups without copying/merging; writes always target the *first* mapping only; `.new_child()`
+- `heapq` (priority queues/heaps) — why it's a set of functions over a plain list rather than its own class, the array-index parent/child math, Python's min-heap-only limitation and the negate-value trick for a max-heap, the `(priority, tiebreaker, item)` trick for stable tie-breaking
+- `bisect` (binary search / sorted insertion) — requires an already-sorted list (doesn't sort for you), `bisect_left` vs `bisect_right` equal-element placement, O(log n) search vs O(n) insertion cost
 
 ---
 
