@@ -59,74 +59,13 @@ where each number represents part of semantic meaning.
 
 ---
 
-# Traditional Database Search
+# Traditional Search vs Vector Search
 
-Suppose:
+Quick recap (full theory in [12_vectors.md](12_vectors.md#19-why-vector-search-beats-keyword-search)):
 
-```text
-Document:
-Python is a programming language
-```
+SQL-style keyword search — `WHERE text LIKE '%python%'` — only matches exact words. "Explain Python coding" would not match a document that says "Python is a programming language."
 
-User asks:
-
-```text
-Tell me about Python
-```
-
-Traditional SQL:
-
-```sql
-WHERE text LIKE '%python%'
-```
-
-Works only for exact words.
-
----
-
-User asks:
-
-```text
-Explain Python coding
-```
-
-No exact match.
-
-Traditional database fails.
-
----
-
-# Vector Database Search
-
-Embeddings:
-
-```text
-Python programming
-    ↓
-
-[0.23,0.87,...]
-```
-
-Query:
-
-```text
-Python coding
-    ↓
-
-[0.25,0.85,...]
-```
-
-Vectors become close.
-
-Database understands:
-
-```text
-programming ≈ coding
-```
-
-without exact word matching.
-
-This is Semantic Search.
+A vector store compares embeddings instead, so `programming ≈ coding` semantically, even with zero word overlap. That's Semantic Search — and it's the whole reason vector stores exist.
 
 ---
 
@@ -185,61 +124,7 @@ Relevant Documents
 
 ---
 
-Detailed Architecture
-
-```text
-PDF
- ↓
-
-Chunking
- ↓
-
-Chunk 1
-Chunk 2
-Chunk 3
-
- ↓
-
-Embedding Model
- ↓
-
-Vector 1
-Vector 2
-Vector 3
-
- ↓
-
-Vector Database
- ↓
-
-Index Creation
-
-────────────────────────────
-
-User Question
- ↓
-
-Embedding Model
- ↓
-
-Query Vector
-
- ↓
-
-Similarity Search
-
- ↓
-
-Top K Documents
-
- ↓
-
-LLM
-
- ↓
-
-Answer
-```
+This is the same end-to-end pipeline walked through in [12_vectors.md](12_vectors.md#20-complete-rag-flow) (chunking → embedding → vector DB, then query → embedding → similarity search → LLM). The vector store is the piece that owns the "Vector Database" and "Similarity Search" steps of that flow — everything below in this file is about how it does that job.
 
 ---
 
@@ -334,45 +219,7 @@ Top chunks returned.
 
 # 6. Distance = Similarity
 
-Two vectors:
-
-```python
-Dog
-[0.5,0.8,0.2]
-```
-
-```python
-Puppy
-[0.6,0.7,0.3]
-```
-
-Very close.
-
-Similarity:
-
-```text
-0.92
-```
-
----
-
-Dog and Car
-
-```python
-Dog
-[0.5,0.8,0.2]
-
-Car
-[0.1,0.2,0.9]
-```
-
-Similarity:
-
-```text
-0.23
-```
-
-Not related.
+Same math as the Euclidean/cosine distance covered in [12_vectors.md](12_vectors.md#9-distance-metrics): close vectors (`Dog` `[0.5,0.8,0.2]` vs `Puppy` `[0.6,0.7,0.3]`) score high similarity (~0.92), while unrelated ones (`Dog` vs `Car` `[0.1,0.2,0.9]`) score low (~0.23). This is exactly the comparison a vector store runs against every stored vector when you call `similarity_search`.
 
 ---
 

@@ -2,313 +2,13 @@
 
 ---
 
-# 1. What is RAG?
+This file focuses on the **hands-on / code side** of building a basic RAG chain in LangChain — chain structure, components, parallel input processing, prompt patterns, sources, and the final LCEL implementation.
 
-RAG (Retrieval-Augmented Generation) is a technique that combines:
-
-1. **Information Retrieval**
-2. **Large Language Models (LLMs)**
-
-to generate answers based on external documents instead of relying only on the model's training data.
+For the conceptual fundamentals — what RAG is, why it exists, RAG architecture, what a vector store is, and why RAG reduces hallucinations — see [16_rag.md](16_rag.md) (sections 1–7 and 17) for the full breakdown.
 
 ---
 
-## Problem Without RAG
-
-A normal LLM:
-
-```
-User Question
-      ↓
-     LLM
-      ↓
-   Answer
-```
-
-The model answers from:
-
-- Pretrained knowledge
-- Patterns learned during training
-
-Limitations:
-
-- Knowledge cutoff date
-- No access to company documents
-- Hallucinations
-- Cannot answer document-specific questions
-
-Example:
-
-**Question:**
-
-```
-What is the return policy mentioned in my company handbook?
-```
-
-The LLM has never seen your handbook.
-
-Possible outcome:
-
-```
-Hallucinated answer
-```
-
----
-
-## Solution: RAG
-
-RAG gives the model access to external knowledge.
-
-```
-User Question
-      ↓
-Retrieve Relevant Documents
-      ↓
-Provide Context
-      ↓
-LLM Generates Answer
-```
-
-Now answers come from:
-
-- PDFs
-- DOCX files
-- Databases
-- Websites
-- Internal company documents
-- Knowledge bases
-
----
-
-# 2. RAG Architecture
-
-Based on the first slide.
-
----
-
-## Complete Flow
-
-```text
-User Query
-    ↓
-Retriever
-    ↓
-Relevant Chunks
-    ↓
-Context + Query
-    ↓
-LLM
-    ↓
-Response
-```
-
----
-
-## Step 1: User Query
-
-Example:
-
-```text
-What are the shipping charges?
-```
-
-User sends a question.
-
----
-
-## Step 2: Retriever
-
-Retriever searches the vector database.
-
-Example:
-
-Vector DB contains:
-
-Chunk 1:
-"Shipping charges within India are ₹100."
-
-Chunk 2:
-"International shipping charges are ₹500."
-
-Chunk 3:
-"Returns are accepted within 30 days."
-
-Retriever finds the most relevant chunks.
-
-Output:
-
-```python
-[
- "Shipping charges within India are ₹100.",
- "International shipping charges are ₹500."
-]
-```
-
----
-
-## Step 3: Context + Query
-
-Retriever output is combined with user question.
-
-Prompt becomes:
-
-```text
-Context:
-
-Shipping charges within India are ₹100.
-
-International shipping charges are ₹500.
-
-Question:
-
-What are the shipping charges?
-```
-
----
-
-## Step 4: LLM
-
-LLM reads:
-
-- Context
-- User Question
-
-Then generates an answer.
-
----
-
-## Step 5: Response
-
-Output:
-
-```text
-Shipping charges within India are ₹100,
-while international shipping charges are ₹500.
-```
-
-Grounded in documents.
-
----
-
-# 3. What is a Vector Store?
-
-Shown on the right side of the slide.
-
----
-
-## Purpose
-
-Stores embeddings for fast similarity search.
-
----
-
-## Why Not Store Raw Text?
-
-Searching millions of documents using keyword search is slow and inaccurate.
-
-Instead:
-
-```text
-Text
- ↓
-Embedding Model
- ↓
-Vector
- ↓
-Vector Database
-```
-
----
-
-## Example
-
-Document:
-
-```text
-LangChain is a framework for LLM applications.
-```
-
-Embedding:
-
-```python
-[0.12, 0.89, -0.44, 0.67, ...]
-```
-
-Thousands of dimensions.
-
----
-
-## Popular Vector Databases
-
-### Local
-
-- FAISS
-- Chroma
-
-### Cloud
-
-- Pinecone
-- Weaviate
-- Qdrant
-- Milvus
-
----
-
-# 4. Why RAG Reduces Hallucinations
-
-Key concept from slide.
-
----
-
-Without RAG:
-
-```text
-Question
- ↓
-LLM guesses
- ↓
-Possible hallucination
-```
-
----
-
-With RAG:
-
-```text
-Question
- ↓
-Retriever finds evidence
- ↓
-LLM answers using evidence
-```
-
----
-
-Example:
-
-Question:
-
-```text
-What is employee leave policy?
-```
-
-Retriever finds:
-
-```text
-Employees receive 20 annual leaves.
-```
-
-LLM answers:
-
-```text
-Employees receive 20 annual leaves annually.
-```
-
-Grounded answer.
-
----
-
-# 5. Basic RAG Chain
+# 1. Basic RAG Chain
 
 From the second slide.
 
@@ -331,7 +31,7 @@ Parser
 
 ---
 
-# 6. Understanding Each Component
+# 2. Understanding Each Component
 
 ---
 
@@ -416,7 +116,7 @@ Shipping charges are ₹100.
 
 ---
 
-# 7. Parallel Input Processing
+# 3. Parallel Input Processing
 
 Shown in slide.
 
@@ -499,7 +199,7 @@ Returns:
 
 ---
 
-# 8. Prompt Template in RAG
+# 4. Prompt Template in RAG
 
 From slide.
 
@@ -538,7 +238,7 @@ Shipping charges are ₹100.
 
 ---
 
-# 9. Handling "I Don't Know"
+# 5. Handling "I Don't Know"
 
 One of the most important concepts in RAG.
 
@@ -611,7 +311,7 @@ Correct behavior.
 
 ---
 
-# 10. Production Prompt Pattern
+# 6. Production Prompt Pattern
 
 Recommended prompt:
 
@@ -634,7 +334,7 @@ Question:
 
 ---
 
-# 11. RAG with Sources
+# 7. RAG with Sources
 
 Fourth slide.
 
@@ -754,37 +454,13 @@ Can trace every answer.
 
 ---
 
-# 12. Full End-to-End RAG Pipeline
+# 8. Full End-to-End Pipeline
 
-```text
-Documents
-    ↓
-Load Documents
-    ↓
-Chunking
-    ↓
-Embeddings
-    ↓
-Vector Store
-    ↓
-Retriever
-    ↓
-User Question
-    ↓
-Relevant Chunks
-    ↓
-Prompt Template
-    ↓
-LLM
-    ↓
-Output Parser
-    ↓
-Final Answer + Sources
-```
+(see [16_rag.md](16_rag.md) section 7 for the full indexing + retrieval + generation pipeline diagram)
 
 ---
 
-# 13. LangChain LCEL Version
+# 9. LangChain LCEL Version
 
 Typical LCEL chain:
 
