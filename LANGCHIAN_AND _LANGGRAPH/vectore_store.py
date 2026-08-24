@@ -1,259 +1,583 @@
+
+# =============================================================================
+# IMPORTS
+# =============================================================================
+
+# LangChain Document object.
+# Every piece of text stored in a vector database is usually wrapped
+# inside a Document object. A Document contains:
+#
+# 1. page_content -> actual text
+# 2. metadata     -> extra information about the text
+#
+# Example:
+# Document(
+#     page_content="Python is a programming language",
+#     metadata={"source": "book"}
+# )
+#
 from langchain_core.documents import Document
+
+
+# Cohere embedding model.
+#
+# Converts text into vectors (lists of floating point numbers).
+#
+# Example:
+#
+# "Python is great"
+#
+# becomes:
+#
+# [0.23, -0.11, 0.98, ..., 0.45]
+#
+# These vectors capture semantic meaning.
+#
 from langchain_cohere import CohereEmbeddings
+
+
+# Chroma Vector Database.
+#
+# Stores embeddings and performs similarity search.
+#
+# Think:
+#
+# Text
+#  ↓
+# Embeddings
+#  ↓
+# Chroma
+#  ↓
+# Similarity Search
+#
 from langchain_chroma import Chroma
+
+
+# Creates temporary folders that are automatically deleted.
+#
+# Used here for examples/testing.
+#
 import tempfile
+
+
+# Recursive Character Text Splitter.
+#
+# Used to break large documents into smaller chunks before embedding.
+#
+# Why?
+#
+# Embedding models work best on smaller pieces of text.
+#
 from langchain_classic.text_splitter import RecursiveCharacterTextSplitter
 
+
+# Load environment variables from .env
+#
+# Used to load:
+#
+# COHERE_API_KEY
+#
 from dotenv import load_dotenv
+
 load_dotenv()
 
+
+# =============================================================================
+# EMBEDDING MODEL
+# =============================================================================
+
+# Create Cohere Embedding model.
+#
+# This model converts text into vectors.
+#
+# Example:
+#
+# "What is Python?"
+#      ↓
+# [0.12, 0.44, ..., 0.78]
+#
 embeddings = CohereEmbeddings(
     model="embed-v4.0"
 )
 
+
+# =============================================================================
+# SAMPLE DOCUMENTS
+# =============================================================================
+
+# Small knowledge base used throughout the examples.
+#
+# Each Document contains:
+#
+# page_content -> searchable text
+# metadata     -> information about that text
+#
+# Metadata is extremely important because later we can:
+#
+# - filter results
+# - trace sources
+# - perform access control
+#
 SAMPLE_DOCS = [
+
     Document(
         page_content="LangChain is a framework for developing applications powered by language models.",
-        metadata={"source": "langchain_docs", "topic": "overview"},
+        metadata={
+            "source": "langchain_docs",
+            "topic": "overview"
+        },
     ),
+
     Document(
         page_content="LangGraph is a library for building stateful, multi-actor applications with LLMs.",
-        metadata={"source": "langgraph_docs", "topic": "overview"},
+        metadata={
+            "source": "langgraph_docs",
+            "topic": "overview"
+        },
     ),
+
     Document(
         page_content="Vector stores are databases optimized for storing and searching embeddings.",
-        metadata={"source": "vector_guide", "topic": "database"},
+        metadata={
+            "source": "vector_guide",
+            "topic": "database"
+        },
     ),
+
     Document(
         page_content="RAG combines retrieval with generation for more accurate LLM responses.",
-        metadata={"source": "rag_guide", "topic": "architecture"},
+        metadata={
+            "source": "rag_guide",
+            "topic": "architecture"
+        },
     ),
+
     Document(
         page_content="Embeddings convert text into numerical vectors for semantic similarity.",
-        metadata={"source": "embeddings_guide", "topic": "fundamentals"},
+        metadata={
+            "source": "embeddings_guide",
+            "topic": "fundamentals"
+        },
     ),
+
     Document(
         page_content="Chroma is an open-source embedding database for AI applications.",
-        metadata={"source": "chroma_docs", "topic": "database"},
+        metadata={
+            "source": "chroma_docs",
+            "topic": "database"
+        },
     ),
+
     Document(
         page_content="FAISS is a library for efficient similarity search developed by Facebook.",
-        metadata={"source": "faiss_docs", "topic": "database"},
+        metadata={
+            "source": "faiss_docs",
+            "topic": "database"
+        },
     ),
+
     Document(
         page_content="Pinecone is a managed vector database service for production workloads.",
-        metadata={"source": "pinecone_docs", "topic": "database"},
+        metadata={
+            "source": "pinecone_docs",
+            "topic": "database"
+        },
     ),
 ]
 
 
+# =============================================================================
+# BASIC CHROMA EXAMPLE
+# =============================================================================
+
 def chroma_basics():
+
+    # Create a temporary folder.
+    #
+    # Chroma stores vectors on disk.
+    #
+    # This directory will be automatically deleted
+    # after execution finishes.
+    #
     with tempfile.TemporaryDirectory() as tmpdir:
-        # create vector store from documents
+
+        # --------------------------------------------------------
+        # Create Vector Store
+        # --------------------------------------------------------
+        #
+        # Flow:
+        #
+        # Documents
+        #     ↓
+        # Embedding Model
+        #     ↓
+        # Vectors
+        #     ↓
+        # Chroma Vector Database
+        #
         vectorstore = Chroma.from_documents(
-            documents=SAMPLE_DOCS, 
-            embedding=embeddings, 
+            documents=SAMPLE_DOCS,
+            embedding=embeddings,
             collection_name="my_unique_collection_v1",
             persist_directory=tmpdir
         )
+
         print(
-            f"Vector store created {vectorstore._collection.count()} documents and persisted."
+            f"Vector store created {vectorstore._collection.count()} documents."
         )
 
-        # perform similarity search
+        # User question
         query = "What is LangChain?"
-        results = vectorstore.similarity_search(query, k=2)
+
+        # --------------------------------------------------------
+        # Similarity Search
+        # --------------------------------------------------------
+        #
+        # Query
+        #   ↓
+        # Query Embedding
+        #   ↓
+        # Compare against stored vectors
+        #   ↓
+        # Return most similar documents
+        #
+        results = vectorstore.similarity_search(
+            query,
+            k=2
+        )
 
         print(f"Top 2 results for query '{query}':")
+
         for i, doc in enumerate(results):
+
             print(
-                f"Result {i+1}: {doc.page_content} (Source: {doc.metadata['source']})"
+                f"Result {i+1}: {doc.page_content} "
+                f"(Source: {doc.metadata['source']})"
             )
 
 
+# =============================================================================
+# SIMILARITY SEARCH WITH SCORES
+# =============================================================================
 
 def similarity_search_with_scores():
+
     with tempfile.TemporaryDirectory() as tmpdir:
-        # create vector store from documents
+
         vectorstore = Chroma.from_documents(
-            documents=SAMPLE_DOCS, embedding=embeddings, persist_directory=tmpdir
+            documents=SAMPLE_DOCS,
+            embedding=embeddings,
+            persist_directory=tmpdir
         )
 
-        # perform similarity search with scores
         query = "Explain vector stores."
-        results_with_scores = vectorstore.similarity_search_with_score(query, k=3)
 
-        print(f"Top 3 results with scores for query '{query}':")
+        # Similarity search WITH scores.
+        #
+        # Returns:
+        #
+        # [
+        #   (document, distance),
+        #   (document, distance)
+        # ]
+        #
+        results_with_scores = (
+            vectorstore.similarity_search_with_score(
+                query,
+                k=3
+            )
+        )
+
+        print(
+            f"Top 3 results with scores for query '{query}':"
+        )
+
         for i, (doc, score) in enumerate(results_with_scores):
-            final_score = 1 / (1 + score)  # Convert distance to similarity
+
+            # Chroma returns distance.
+            #
+            # Smaller distance = better match.
+            #
+            # Convert distance into a similarity score.
+            #
+            final_score = 1 / (1 + score)
+
             print(
-                f"Result {i+1}: {doc.page_content} (Score: {final_score:.4f}, Source: {doc.metadata['source']})"
+                f"Result {i+1}: "
+                f"{doc.page_content} "
+                f"(Score: {final_score:.4f})"
             )
 
 
+# =============================================================================
+# METADATA FILTERING
+# =============================================================================
+
 def metadata_filtering():
+
     with tempfile.TemporaryDirectory() as tmpdir:
-        # create vector store from documents
+
         vectorstore = Chroma.from_documents(
-            documents=SAMPLE_DOCS, embedding=embeddings, persist_directory=tmpdir
+            documents=SAMPLE_DOCS,
+            embedding=embeddings,
+            persist_directory=tmpdir
         )
 
         query = "What databases are available?"
 
-        # without metadata filtering
-        results = vectorstore.similarity_search(query, k=5)
-        print(f"Results without metadata filtering for query '{query}':")
-        for i, doc in enumerate(results):
-            print(
-                f"Result {i+1}: {doc.page_content} (Source: {doc.metadata['source']})"
-            )
-
-        # with metadata filtering
-        filter_criteria = {"topic": "database"}
-        filtered_results = vectorstore.similarity_search(
-            query, k=5, filter=filter_criteria
+        # --------------------------------------------------------
+        # Search ALL documents
+        # --------------------------------------------------------
+        results = vectorstore.similarity_search(
+            query,
+            k=5
         )
-        print(f"\nResults with metadata filtering for query '{query}':")
-        for i, doc in enumerate(filtered_results):
-            print(
-                f"Result {i+1}: {doc.page_content} (Source: {doc.metadata['source']})"
-            )
+
+        # --------------------------------------------------------
+        # Search only documents
+        # where topic == database
+        # --------------------------------------------------------
+        #
+        # This reduces search space.
+        #
+        filter_criteria = {
+            "topic": "database"
+        }
+
+        filtered_results = vectorstore.similarity_search(
+            query,
+            k=5,
+            filter=filter_criteria
+        )
 
 
-
+# =============================================================================
+# PERSISTENT CHROMA
+# =============================================================================
 
 def persist_chroma():
+
+    # Folder where vectors are stored.
+    #
+    # Unlike temporary folders,
+    # this survives application restarts.
+    #
     persist_dir = "./chroma_db/"
 
+    # Create database.
     vectorstore = Chroma.from_documents(
         documents=SAMPLE_DOCS,
         embedding=embeddings,
         persist_directory=persist_dir,
     )
 
-    original_count = vectorstore._collection.count()
-    print(f"Persisted vector store with {original_count} documents.")
-    print(f"Vector store persisted at: {persist_dir}")
-
-    # simulate restart - load from disk
+    # Simulate application restart.
     del vectorstore
 
+    # Reload vector store from disk.
+    #
+    # No re-embedding required.
+    #
     reloaded = Chroma(
         embedding_function=embeddings,
         persist_directory=persist_dir,
     )
 
-    reloaded_count = reloaded._collection.count()
-    print(f"Reloaded vector store with {reloaded_count} documents.")
+    # Search still works because vectors
+    # were persisted.
+    #
+    results = reloaded.similarity_search(
+        "LangChain",
+        k=2
+    )
 
-    # verify search still works
-    results = reloaded.similarity_search("LangChain", k=2)
-    print(f"Search result: {results[0].page_content[:50]}...")
 
+# =============================================================================
+# RETRIEVERS
+# =============================================================================
 
 def as_retriever():
 
     with tempfile.TemporaryDirectory() as tmpdir:
+
         vectorstore = Chroma.from_documents(
             documents=SAMPLE_DOCS,
             embedding=embeddings,
             persist_directory=tmpdir,
         )
 
-        # basic retriever usage
+        # --------------------------------------------------------
+        # Convert Vector Store into Retriever
+        # --------------------------------------------------------
+        #
+        # Vector Store:
+        #     Stores vectors
+        #
+        # Retriever:
+        #     Retrieves vectors
+        #
         retriever = vectorstore.as_retriever(
-            search_type="similarity", search_kwargs={"k": 3}
+            search_type="similarity",
+            search_kwargs={"k": 3}
         )
-        # use retriever to get relevant documents
-        docs = retriever.invoke("How do I build AI applications?")
 
-        print("Retriever results:")
-        for i, doc in enumerate(docs):
-            print(
-                f"Result {i+1}: {doc.page_content} (Source: {doc.metadata['source']})"
-            )
+        docs = retriever.invoke(
+            "How do I build AI applications?"
+        )
 
+        # --------------------------------------------------------
+        # MMR Retriever
+        # --------------------------------------------------------
+        #
+        # MMR = Maximum Marginal Relevance
+        #
+        # Goal:
+        #
+        # Return relevant AND diverse documents.
+        #
+        # Instead of:
+        #
+        # Doc1 = Python
+        # Doc2 = Python
+        # Doc3 = Python
+        #
+        # Return:
+        #
+        # Doc1 = Python
+        # Doc2 = LangChain
+        # Doc3 = RAG
+        #
         mmr_retriever = vectorstore.as_retriever(
             search_type="mmr",
-            search_kwargs={"k": 3, "fetch_k": 5},  # fetch 5 docs and return 3 diverse
+            search_kwargs={
+                "k": 3,
+                "fetch_k": 5
+            }
         )
-        mmr_docs = mmr_retriever.invoke("vector databases and embeddings")
-        print("\nMMR Retriever results:")
-        for i, doc in enumerate(mmr_docs):
-            print(
-                f"Result {i+1}: {doc.page_content} (Source: {doc.metadata['source']})"
-            )
+
+        mmr_docs = mmr_retriever.invoke(
+            "vector databases and embeddings"
+        )
 
 
-# Exercise: Set up Chroma + retriever
+# =============================================================================
+# COMPLETE RAG-LIKE PIPELINE
+# =============================================================================
+
 def exercise_vector_store_setup():
-    """
-    EXERCISE: Create a complete vector store setup that:
-    1. Takes a list of text strings
-    2. Splits them into chunks
-    3. Stores in Chroma
-    4. Returns a configured retriever
-
-    Test with sample documents.
-    """
 
     def create_retriever(
-        texts: list[str], chunk_size: int = 500, chunk_overlap: int = 50, k: int = 3
+
+        texts: list[str],
+
+        chunk_size: int = 500,
+
+        chunk_overlap: int = 50,
+
+        k: int = 3
+
     ):
 
-        # Create documents
-        docs = [Document(page_content=t) for t in texts]
+        # --------------------------------------------------------
+        # Convert text into Documents
+        # --------------------------------------------------------
+        docs = [
+            Document(page_content=t)
+            for t in texts
+        ]
 
-        # Split
+        # --------------------------------------------------------
+        # Chunking
+        # --------------------------------------------------------
+        #
+        # Large text
+        #
+        # 2000 chars
+        #
+        # becomes:
+        #
+        # Chunk 1
+        # Chunk 2
+        # Chunk 3
+        #
         splitter = RecursiveCharacterTextSplitter(
-            chunk_size=chunk_size, chunk_overlap=chunk_overlap
+            chunk_size=chunk_size,
+            chunk_overlap=chunk_overlap
         )
-        split_docs = splitter.split_documents(docs)
 
-        # Create vector store (in-memory for exercise)
+        split_docs = splitter.split_documents(
+            docs
+        )
+
+        # --------------------------------------------------------
+        # Create Vector Store
+        # --------------------------------------------------------
+        #
+        # Chunks
+        #   ↓
+        # Embeddings
+        #   ↓
+        # Chroma
+        #
         vectorstore = Chroma.from_documents(
-            documents=split_docs, embedding=embeddings
+            documents=split_docs,
+            embedding=embeddings
         )
 
-        # Return retriever
+        # --------------------------------------------------------
+        # Return Retriever
+        # --------------------------------------------------------
+        #
+        # Retriever becomes the retrieval
+        # component of a RAG application.
+        #
         return vectorstore.as_retriever(
-            search_type="similarity", search_kwargs={"k": k}
+            search_type="similarity",
+            search_kwargs={"k": k}
         )
 
-    # Test the function
-    # Test
     sample_texts = [
-        "Python is a versatile programming language used in web development, "
-        "data science, machine learning, and automation. It has a simple syntax "
-        "that makes it easy to learn and read.",
-        "JavaScript is the language of the web. It runs in browsers and on "
-        "servers with Node.js. Modern frameworks like React and Vue make "
-        "building web applications efficient.",
-        "Rust is a systems programming language focused on safety and "
-        "performance. It prevents common bugs like null pointer dereferences "
-        "and data races at compile time.",
+        "Python is a versatile programming language...",
+        "JavaScript is the language of the web...",
+        "Rust is a systems programming language..."
     ]
 
-    retriever = create_retriever(sample_texts, chunk_size=200, chunk_overlap=20, k=2)
+    retriever = create_retriever(
+        sample_texts,
+        chunk_size=200,
+        chunk_overlap=20,
+        k=2
+    )
 
-    print("Testing retriever:\n")
-    queries = [
-        "What's good for web development?",
-        "Which language is safest?",
-    ]
-    for query in queries:
-        print(f"Query: {query}")
-        results = retriever.invoke(query)
-        for doc in results:
-            print(f"  - {doc.page_content[:60]}...")
-        print()
-
+    # Query
+    #
+    # User Question
+    #      ↓
+    # Retriever
+    #      ↓
+    # Relevant Chunks
+    #
+    results = retriever.invoke(
+        "What's good for web development?"
+    )
 
 
 if __name__ == "__main__":
+
+    # Basic Chroma Example
     # chroma_basics()
+
+    # Similarity Search + Scores
     # similarity_search_with_scores()
+
+    # Metadata Filtering
     # metadata_filtering()
+
+    # Persistence Example
     # persist_chroma()
+
+    # Retriever Example
     # as_retriever()
+
+    # Full Pipeline Example
     exercise_vector_store_setup()

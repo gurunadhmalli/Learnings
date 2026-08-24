@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ML Journey — 52 Week Tracker</title>
+<style>
+  :root{
+    --bg:#0e1116; --panel:#161b22; --panel2:#1c2230; --border:#2a3140;
+    --text:#e6edf3; --muted:#8b98a9; --accent:#4c8dff; --accent2:#2ea043;
+    --warn:#d29922; --radius:10px;
+  }
+  body.light{
+    --bg:#f6f8fa; --panel:#ffffff; --panel2:#f0f3f7; --border:#d8dee4;
+    --text:#1f2328; --muted:#616a75; --accent:#0969da; --accent2:#1a7f37;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:15px;line-height:1.55;transition:background .2s,color .2s}
+  .wrap{max-width:1000px;margin:0 auto;padding:28px 20px 80px}
+  header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+  h1{font-size:24px;margin:0 0 4px}
+  .sub{color:var(--muted);font-size:13px;margin:0}
+  .btns{display:flex;gap:8px;flex-wrap:wrap}
+  button{background:var(--panel2);color:var(--text);border:1px solid var(--border);
+    padding:7px 13px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit}
+  button:hover{border-color:var(--accent)}
+  button.danger:hover{border-color:#f85149;color:#f85149}
+
+  .overall{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+    padding:18px 20px;margin:20px 0 14px}
+  .ovtop{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+  .big{font-size:30px;font-weight:700;letter-spacing:-.5px}
+  .stats{display:flex;gap:22px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:12px}
+  .stats b{color:var(--text);font-size:14px;display:block}
+
+  .bar{height:9px;background:var(--panel2);border-radius:99px;overflow:hidden;border:1px solid var(--border)}
+  .bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));
+    width:0;transition:width .35s ease}
+
+  .phase{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+    margin-bottom:12px;overflow:hidden}
+  .phead{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+  .phead:hover{background:var(--panel2)}
+  .pnum{flex:0 0 34px;height:34px;border-radius:8px;background:var(--panel2);border:1px solid var(--border);
+    display:grid;place-items:center;font-weight:700;font-size:13px;color:var(--muted)}
+  .phase.done .pnum{background:var(--accent2);border-color:var(--accent2);color:#fff}
+  .pinfo{flex:1;min-width:0}
+  .ptitle{font-weight:600;font-size:15px}
+  .pmeta{font-size:12px;color:var(--muted);margin-top:1px}
+  .ppct{font-variant-numeric:tabular-nums;font-size:13px;color:var(--muted);min-width:42px;text-align:right}
+  .pbar{flex:0 0 110px}
+  .caret{color:var(--muted);font-size:11px;transition:transform .2s}
+  .phase.open .caret{transform:rotate(90deg)}
+  .pbody{display:none;padding:4px 18px 18px 66px;border-top:1px solid var(--border)}
+  .phase.open .pbody{display:block}
+
+  .grp{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
+    margin:16px 0 6px;font-weight:600}
+  .grp:first-child{margin-top:12px}
+  label.item{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer;font-size:14px}
+  label.item input{margin:4px 0 0;accent-color:var(--accent2);width:15px;height:15px;flex:0 0 auto;cursor:pointer}
+  label.item.checked span{color:var(--muted);text-decoration:line-through}
+  .note{margin-top:14px}
+  .note textarea{width:100%;min-height:60px;background:var(--panel2);color:var(--text);
+    border:1px solid var(--border);border-radius:8px;padding:9px 11px;font-family:inherit;font-size:13px;resize:vertical}
+  .link{font-size:12px;color:var(--accent);text-decoration:none}
+  .link:hover{text-decoration:underline}
+  footer{margin-top:26px;color:var(--muted);font-size:12px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div>
+    <h1>ML Journey — 52 Weeks to Production</h1>
+    <p class="sub">Data Science · Machine Learning · Deep Learning · GenAI · Agentic AI · MLOps</p>
+  </div>
+  <div class="btns">
+    <button id="theme">Light mode</button>
+    <button id="expand">Expand all</button>
+    <button id="export">Export</button>
+    <button id="reset" class="danger">Reset</button>
+  </div>
+</header>
+
+<div class="overall">
+  <div class="ovtop">
+    <div><span class="big" id="pct">0%</span> <span class="sub">complete</span></div>
+    <div class="sub" id="phasenow">Phase 0 — Foundations</div>
+  </div>
+  <div class="bar"><i id="obar"></i></div>
+  <div class="stats">
+    <div><b id="sDone">0</b> items done</div>
+    <div><b id="sLeft">0</b> remaining</div>
+    <div><b id="sWeek">1</b> estimated week</div>
+    <div><b id="sHours">0</b> hours logged (est.)</div>
+    <div><b id="sPhases">0 / 9</b> phases complete</div>
+  </div>
+</div>
+
+<div id="phases"></div>
+
+<footer>Progress is saved in this browser only. Use <b>Export</b> to back it up.</footer>
+</div>
+
+<script>
+const DATA = [
+ {n:0,t:"Foundations: Python, Math, CS",w:"Weeks 1–7",h:300,f:"phases/00-foundations.md",g:[
+  {g:"Python core",i:["Data model + complexity of list/dict/set","Mutability, copies, mutable-default trap","Comprehensions, generators, itertools","Decorators, closures, functools","OOP: composition, dunder methods, dataclasses, ABCs","Context managers","Exceptions + custom exception classes","Type hints + mypy passing","Packaging: pyproject.toml, uv/poetry"]},
+  {g:"Engineering practice",i:["ruff clean on all code","pytest: fixtures, parametrize, mocking, >80% coverage","Logging + CLI with typer/argparse","Debugging with pdb; reading tracebacks","Profiling: cProfile, line_profiler","Threads vs processes vs asyncio, the GIL","Git: branching, rebase, conflicts, PR flow"]},
+  {g:"NumPy",i:["ndarray, dtype, shape, views vs copies","Broadcasting rules internalized","Vectorization + boolean masking + fancy indexing","Axis semantics automatic","einsum and matrix ops","Numerical stability + log-sum-exp","100 NumPy exercises done"]},
+  {g:"Linear algebra",i:["3Blue1Brown Essence of LA — all 15 videos","Vectors, span, basis, independence","Matrices as transformations","Determinant, inverse, rank, null space","Dot product, projection, cosine similarity","Eigenvalues & eigenvectors (geometric)","SVD + low-rank approximation","Norms L1/L2/Frobenius; why L1 sparsifies","Matrix calculus basics + Jacobian"]},
+  {g:"Calculus & optimization",i:["Partial derivatives and gradients","Chain rule, multivariate — deeply","Hessian and curvature; Taylor expansion","Convexity and its implications","Gradient descent: batch/stochastic/mini-batch","Momentum, RMSProp, Adam/AdamW update rules","LR schedules: cosine, warmup, one-cycle","Lagrange multipliers","Forward vs reverse-mode autodiff"]},
+  {g:"Probability & statistics",i:["Conditional probability, Bayes' theorem","Random variables, PMF/PDF/CDF, expectation, variance","Key distributions and when each arises","LLN and CLT (and its limits)","MLE and MAP; loss functions as MLE","Entropy, cross-entropy, KL divergence","Sampling methods; bootstrap","Estimator bias, variance, consistency","Confidence intervals + hypothesis testing","p-values — precise interpretation","Multiple comparisons: Bonferroni, FDR"]},
+  {g:"CS & environment",i:["Big-O analysis of own code","Core data structures & algorithms","~50 LeetCode easy/medium","Linux CLI: pipes, grep/awk/sed, ssh, tmux","Docker: images, Dockerfile, layers, compose","One cloud provider: compute + storage + IAM","Colab/Kaggle GPU workflow"]},
+  {g:"Deliverables",i:["📦 Pip-installable CLI tool, typed, tested, CI green","📦 PCA from scratch (eigen + SVD) on MNIST","📦 micrograd-style autodiff engine + MLP","📦 Statistics simulation notebook (CLT, bootstrap, p-hacking)","📦 Dockerized tool running on a cloud VM","✅ Exit checklist: all 11 questions answered cold"]}]},
+
+ {n:1,t:"Data Science & Analytics",w:"Weeks 8–12",h:210,f:"phases/01-data-science.md",g:[
+  {g:"SQL",i:["Logical execution order","All join types + join fan-out awareness","CTEs and recursive CTEs","Window functions: ROW_NUMBER, RANK, LAG/LEAD, frames","NULL semantics / three-valued logic","Date functions + cohort queries","Indexes and EXPLAIN plans","Transactions, ACID, isolation levels","Star schema vs normalization","60–80 practice problems solved"]},
+  {g:"pandas & stack",i:["loc vs iloc; SettingWithCopyWarning understood","groupby: agg vs transform vs apply","Merging with validate= cardinality checks","Reshaping: pivot, melt, stack/unstack","Missing data: NaN vs None vs pd.NA","Time series: resample, rolling, shift, timezones","dtypes and memory optimization","Method chaining / pipe","Polars basics + lazy execution","Parquet vs CSV; columnar storage"]},
+  {g:"Visualization",i:["matplotlib figure/axes model mastered","seaborn distributions & relationships","plotly interactive charts","Chart choice, data-ink ratio, colorblind palettes"]},
+  {g:"EDA discipline",i:["Full 11-step EDA checklist applied to a real dataset","Missingness pattern analysis (MCAR/MAR/MNAR)","Outlier decisions with documented reasoning","Leakage hunt performed and written up","Temporal drift check","Simpson's paradox segment check"]},
+  {g:"Feature engineering",i:["Scaling, log/Box-Cox, binning","Categorical encodings incl. out-of-fold target encoding","Cyclical datetime encoding, lags, rolling windows","TF-IDF and n-grams","Everything inside Pipeline/ColumnTransformer"]},
+  {g:"Statistics & experiments",i:["Sampling distributions, SE vs SD","CIs and their misinterpretations","t-test, chi-square, ANOVA, KS, Mann-Whitney","Effect size vs statistical significance","Power analysis + sample size calculation","Bonferroni / Benjamini-Hochberg","Bootstrap and permutation tests","Bayesian A/B testing","A/B design: OEC, guardrails, randomization unit","SRM check; peeking problem; sequential testing","Novelty/primacy effects; CUPED","Switchback tests"]},
+  {g:"Causal inference",i:["Confounders, colliders, mediators","Potential outcomes: ATE, ATT","DAGs and control-variable selection","Propensity matching, IPW","Difference-in-differences","Regression discontinuity, IV","Uplift modeling; DoWhy/EconML"]},
+  {g:"Regression as inference",i:["OLS assumptions and violations","Coefficient interpretation, R² vs adjusted R²","Multicollinearity and VIF","Residual diagnostics, robust SEs","Logistic regression odds ratios","GLMs and link functions","statsmodels vs sklearn — why both"]},
+  {g:"Deliverables",i:["📦 End-to-end analytics project on messy real data","📦 SQL extraction with ≥2 window functions","📦 Reproducible .py cleaning/feature pipeline","📦 Written EDA report answering 3 business questions","📦 Causal or experimental analysis with stated assumptions","📦 Published as a blog post","✅ Exit checklist: all 9 items"]}]},
+
+ {n:2,t:"Classical Machine Learning",w:"Weeks 13–19",h:300,f:"phases/02-classical-ml.md",g:[
+  {g:"Framing & evaluation",i:["Learning paradigms mapped","Bias–variance decomposition derived","Learning curves read correctly","Train/val/test discipline; test touched once","CV: k-fold, stratified, group, time-series","Nested CV for honest tuning estimates","Curse of dimensionality; No Free Lunch","Regularization as a prior (L1/L2/elastic net)","Classification metrics incl. PR-AUC vs ROC-AUC","Calibration: reliability diagrams, Platt, isotonic","Regression metrics incl. Huber and quantile loss","Ranking metrics: MAP, NDCG, MRR","Metric chosen from the decision it drives"]},
+  {g:"Linear & margin models",i:["Linear regression: normal equation vs GD","Ridge / Lasso / Elastic Net geometry","Logistic regression: log-odds, cross-entropy","k-NN + distance metrics + KD-trees","SVM: margin, hinge loss, dual, kernel trick","⚙️ From scratch: linear + logistic regression","⚙️ From scratch: k-NN"]},
+  {g:"Probabilistic models",i:["Naive Bayes variants + Laplace smoothing","LDA / QDA","Gaussian Mixture Models + EM"]},
+  {g:"Trees & ensembles",i:["Decision trees: Gini, entropy, pruning","Bagging & Random Forest; OOB error","AdaBoost; gradient boosting as functional GD","XGBoost: second-order approximation, regularization","LightGBM: leaf-wise, GOSS, EFB, histograms","CatBoost: ordered boosting, categorical handling","Stacking with out-of-fold meta-features","⚙️ From scratch: decision tree","⚙️ From scratch: small gradient booster"]},
+  {g:"Imbalanced data",i:["SMOTE / ADASYN / Tomek links","Class weights and cost-sensitive learning","Threshold moving from a cost matrix","Isolation Forest, One-Class SVM, LOF"]},
+  {g:"Unsupervised",i:["k-means, k-means++, choosing k","Hierarchical clustering + dendrograms","DBSCAN / HDBSCAN","GMM soft assignment","PCA + explained variance + kernel PCA","t-SNE and its severe caveats","UMAP","NMF and SVD for recommendations","Association rules: Apriori, FP-Growth","⚙️ From scratch: k-means and PCA"]},
+  {g:"Practitioner toolkit",i:["sklearn estimator API + custom transformers","Pipeline + ColumnTransformer for everything","Grid vs random vs Halving search","Optuna: TPE, pruning, study persistence","Permutation importance vs impurity importance","SHAP: TreeSHAP, summary/dependence plots","LIME, PDP, ICE, counterfactuals","Fairness metrics and their incompatibility","Model cards and datasheets"]},
+  {g:"Time series",i:["Decomposition; stationarity; ADF/KPSS","ACF/PACF reading","ARIMA / SARIMA / SARIMAX","Exponential smoothing / Holt-Winters / ETS","Rolling-origin backtesting","Lag+rolling features with LightGBM","Prophet — uses and limits","VAR; hierarchical forecasting","MASE, sMAPE, pinball loss"]},
+  {g:"Deliverables",i:["📦 Project A: tabular competition with own pipeline","📦 Leakage-free CV that correlates with leaderboard","📦 SHAP analysis + written error analysis","📦 Project B: myml from-scratch library + tests vs sklearn","📦 Project C: FastAPI service, Dockerized, deployed live","✅ Exit checklist: all 10 items"]}]},
+
+ {n:3,t:"Deep Learning",w:"Weeks 20–26",h:300,f:"phases/03-deep-learning.md",g:[
+  {g:"Fundamentals",i:["MLP; universal approximation and its limits","Activations: ReLU family, GELU, SiLU; dying ReLU","Losses as maximum-likelihood statements","Softmax + log-sum-exp stability","⚙️ Backprop derived by hand on paper","Vanishing/exploding gradients","Xavier vs He initialization (variance argument)","⚙️ From scratch: NumPy MLP >95% on MNIST"]},
+  {g:"PyTorch",i:["Tensors, devices, broadcasting","Autograd: graph, backward, no_grad, detach","nn.Module, state_dict, buffers vs parameters","Dataset/DataLoader/collate_fn/num_workers","Optimizers and LR schedulers","Canonical training loop from memory","Checkpointing, resuming, seeding","torch.compile / TorchScript / export","Mixed precision (bf16) + GradScaler","DDP and FSDP basics","Debugging NaNs and shape errors","torch.profiler — find the dataloader bottleneck","PyTorch Lightning (after raw loops)"]},
+  {g:"Training craft",i:["Batch norm: train vs eval, batch size effects","Layer norm / RMSNorm; pre- vs post-norm","Dropout (inverted); weight decay vs L2","Label smoothing; gradient clipping","Augmentation: Mixup, CutMix, RandAugment, SpecAugment","LR range test; cosine + warmup + one-cycle","Batch size scaling; gradient accumulation","Gradient checkpointing","Overfit-one-batch sanity check habit","Karpathy's Recipe read (×3)","Diagnosed 4 deliberately broken trainings"]},
+  {g:"Computer vision",i:["Convolution: stride, padding, dilation, receptive field","LeNet→AlexNet→VGG→Inception→ResNet→EfficientNet→ConvNeXt","ResNet skip connections and gradient flow","Vision Transformers; Swin windows","Transfer learning + discriminative LRs","Detection: Faster R-CNN, YOLO, RetinaNet; IoU/NMS/mAP","Segmentation: U-Net, DeepLab, Mask R-CNN, SAM","Self-supervised: SimCLR, BYOL, DINOv2, MAE","CLIP contrastive pretraining","VAE: ELBO + reparameterization trick","GANs: minimax, mode collapse, StyleGAN","Diffusion: DDPM, DDIM, CFG, latent diffusion, ControlNet"]},
+  {g:"Sequence models",i:["RNN + BPTT + vanishing gradients","LSTM gates traced by hand","GRU simplification","Seq2seq bottleneck","Bahdanau/Luong attention","Teacher forcing and exposure bias","Beam search","1D CNNs / TCNs"]},
+  {g:"Adjacent areas",i:["GNNs: message passing, GCN, GraphSAGE, GAT","Recommenders: MF, ALS, two-tower, retrieval→ranking","RL: MDPs, Bellman, DQN, policy gradients, PPO","Multimodal fusion strategies","Quantization (PTQ/QAT), pruning, distillation","ONNX / TensorRT inference optimization"]},
+  {g:"Deliverables",i:["📦 NumPy MLP >95% MNIST + written backprop derivation","📦 Tensor-capable autodiff engine with nn API","📦 CV project on self-collected data + ablation table","📦 DDPM diffusion model from scratch + math writeup","📦 Training-diagnostics writeup (4 failures documented)","✅ Exit checklist: all 10 items"]}]},
+
+ {n:4,t:"NLP & Transformers",w:"Weeks 27–31",h:210,f:"phases/04-nlp-transformers.md",g:[
+  {g:"Classical NLP",i:["Normalization, stemming vs lemmatization","Bag of words + TF-IDF baseline","N-gram LMs, smoothing, perplexity","Word2Vec (skip-gram, negative sampling)","GloVe and FastText subwords","Embedding geometry and encoded bias","NER, POS, dependency parsing, CRFs","BLEU/ROUGE/METEOR and their weaknesses","spaCy / NLTK / Gensim"]},
+  {g:"Transformer mechanics",i:["Q/K/V as soft dictionary lookup","Scaled dot-product attention + √d_k variance argument","Multi-head attention: subspaces, concat, projection","Self- vs cross-attention","Causal masking; padding masks","O(n²) complexity and its consequences","Positional encodings: sinusoidal, learned, RoPE, ALiBi","FFN, expansion ratio, SwiGLU","Residuals + pre-norm vs post-norm","Encoder-only vs decoder-only vs enc-dec","Weight tying"]},
+  {g:"Efficiency",i:["KV caching; memory-bandwidth-bound generation","MQA and GQA","FlashAttention 1/2/3 — IO-aware tiling","PagedAttention","Sparse/linear attention: Longformer, BigBird, Performer","Sliding-window attention; Mixture-of-Experts","State-space models / Mamba tradeoffs"]},
+  {g:"Tokenization",i:["Why char- and word-level fail","⚙️ BPE implemented from scratch","WordPiece, Unigram/SentencePiece, byte-level BPE","Vocab size tradeoffs; special tokens; chat templates","Practical consequences (counting, numbers, non-English)"]},
+  {g:"Model families",i:["BERT family: MLM, RoBERTa, DeBERTa, ELECTRA","GPT family: causal LM, in-context learning","Scaling laws: Kaplan → Chinchilla","T5 text-to-text; BART denoising","Embedding models + contrastive training + MTEB","Cross-encoders vs bi-encoders","Multimodal: CLIP, BLIP-2, LLaVA","HF transformers/datasets/tokenizers/accelerate","Model licensing awareness"]},
+  {g:"Fine-tuning",i:["Full FT memory math (~16 bytes/param AdamW)","LoRA: rank decomposition, alpha, target modules","QLoRA: NF4, double quantization, paged optimizers","Adapters, prefix/prompt tuning, IA³, DoRA","Catastrophic forgetting mitigation","Instruction tuning formats + chat templates","RLHF (reward model + PPO)","DPO, ORPO, KTO","Prompt-token loss masking; packing"]},
+  {g:"Deliverables",i:["📦 mygpt: decoder-only transformer from scratch","📦 Own BPE tokenizer + RoPE + KV caching","📦 Trained on a domain corpus, coherent output","📦 Architecture walkthrough published","📦 Attention visualizer tool","📦 QLoRA fine-tune of a 7B model + honest eval","📦 Embedding model benchmark (recall@k + latency)","✅ Exit checklist: all 10 items"]}]},
+
+ {n:5,t:"GenAI / LLM Engineering",w:"Weeks 32–37",h:250,f:"phases/05-genai-llm.md",g:[
+  {g:"Working with LLMs",i:["Decoding: temperature, top-k, top-p, min-p","Repetition/frequency/presence penalties","Structured outputs: JSON schema, grammars, Outlines","Speculative decoding","Logprobs for confidence estimation","Zero/few-shot; example selection effects","CoT, self-consistency, ReAct, Tree-of-Thoughts","Prompt chaining and decomposition","Self-critique / reflexion","Lost-in-the-middle mitigation","Prompts in git, versioned, with tests","DSPy / automatic prompt optimization","Token economics + prompt caching","Model routing and escalation","TTFT vs TPOT; streaming"]},
+  {g:"RAG — ingestion",i:["Layout-aware PDF parsing (unstructured/Docling)","Chunking: fixed, recursive, semantic, structure-aware","Chunk size/overlap measured not guessed","Metadata extraction + contextual retrieval","Tables and images handled"]},
+  {g:"RAG — retrieval",i:["Vector DB chosen and configured (pgvector/Qdrant/etc.)","HNSW parameters and the recall/latency tradeoff","BM25 sparse retrieval","Hybrid search + Reciprocal Rank Fusion","Cross-encoder reranking","Query rewriting, HyDE, multi-query","Metadata filtering: pre vs post","Parent-document / small-to-big retrieval","GraphRAG for multi-hop","Agentic and iterative retrieval"]},
+  {g:"RAG — generation & eval",i:["Context assembly, ordering, token budgeting","Citations and span-level grounding","Designed refusal when context insufficient","Retrieval metrics: recall@k, MRR, NDCG","Generation metrics: faithfulness, relevance","RAGAS / DeepEval / Promptfoo harness","Golden dataset built (synthetic + human review)","LLM-as-judge rubric + bias calibration","6-level failure taxonomy memorized and applied"]},
+  {g:"Fine-tuning in practice",i:["Decision framework: prompt→few-shot→RAG→FT","Dataset construction, dedup, decontamination","Synthetic data / distillation (license-checked)","trl: SFTTrainer, DPOTrainer, packing","Axolotl / Unsloth / LLaMA-Factory config","Continued pretraining for domain adaptation","Model merging: SLERP, TIES, DARE, mergekit","Eval vs base + vs prompted frontier model"]},
+  {g:"Serving",i:["vLLM: PagedAttention, continuous batching, prefix cache","TGI / SGLang / TensorRT-LLM / llama.cpp","Quantization: GPTQ, AWQ, GGUF, FP8","VRAM estimation: weights + KV cache + activations","Throughput vs latency tuning","LiteLLM gateway, fallback, budgets","Semantic caching","Tracing with Langfuse/LangSmith/Phoenix"]},
+  {g:"Safety & governance",i:["Direct and indirect prompt injection","Layered defenses; privilege separation","Data exfiltration vectors (markdown images, tools)","PII detection, redaction, residency","Guardrails: Llama Guard, NeMo, moderation APIs","Hallucination detection strategies","Licensing and training-data provenance","EU AI Act tiers; NIST AI RMF","Red-teamed own system"]},
+  {g:"Deliverables",i:["📦 Production RAG over a real corpus","📦 ≥100-question golden eval set","📦 Ablation table: measured quality per stage","📦 Reusable eval harness failing CI on regression","📦 vLLM benchmark: TTFT/TPOT/throughput/cost","📦 Red-team report with mitigations","✅ Exit checklist: all 10 items"]}]},
+
+ {n:6,t:"Agentic AI",w:"Weeks 38–41",h:170,f:"phases/06-agentic-ai.md",g:[
+  {g:"Foundations",i:["Tool calling: schema design, validation, execution","ReAct pattern implemented","Plan-and-execute vs interleaved","Reflexion / self-critique loops","Stopping conditions: step caps, budgets, no-progress","Error handling and retries with feedback","Cost/latency ceilings enforced in code"]},
+  {g:"Architectures",i:["Single agent with tools (default choice)","Router / dispatcher patterns","Multi-agent: supervisor-worker, hierarchical, debate","Human-in-the-loop approval gates","Workflow vs agent — deliberate choice made"]},
+  {g:"Memory & context",i:["Short-term: windowing, summarization, compaction","Long-term: vector/episodic/semantic memory","Memory write policies","Scratchpads and external state","Context engineering as a discipline"]},
+  {g:"Tools & environments",i:["MCP: built a working server","Sandboxed code execution (Docker/E2B/Firecracker)","Browser automation with Playwright","API auth with least-privilege credentials","Retrieval as a tool, not a fixed step"]},
+  {g:"Frameworks",i:["LangGraph: state machine, checkpointing, HITL","LangChain / LlamaIndex ecosystem awareness","CrewAI / AutoGen / Agents SDK / Pydantic AI","DSPy programmatic optimization","Durable execution (Temporal) concept","⚙️ Same agent built twice: framework vs raw loop"]},
+  {g:"Reliability",i:["Trajectory evaluation designed","Tool-call accuracy measured","Step-level error attribution","Benchmarks known: SWE-bench, GAIA, τ-bench","Golden trajectories from real traces","Replay regression tests in CI","Distributed tracing with cost attribution","7 failure modes + fixes memorized","p^n reliability math internalized"]},
+  {g:"Security",i:["Least-privilege scoped credentials","Lethal trifecta avoided by design","Approval gates on irreversible actions","Egress filtering + sandboxing","Full audit logging"]},
+  {g:"Advanced",i:["Reasoning models: when extended thinking pays","Test-time compute scaling","Code agents + test-driven loops","Computer-use agents and their ceiling","Multi-agent orchestration and termination","Caching deterministic tool calls","Fallback ladder: agent→workflow→human"]},
+  {g:"Deliverables",i:["📦 ~200-line agent from scratch, no framework","📦 Production agent with HITL + tracing + cost caps","📦 ≥30-scenario trajectory eval suite in CI","📦 MCP server exposing real tools","📦 Reliability report: 100 runs, before/after fixes","✅ Exit checklist: all 8 items"]}]},
+
+ {n:7,t:"MLOps & Production",w:"Weeks 42–47",h:250,f:"phases/07-mlops-production.md",g:[
+  {g:"Mindset",i:["Read 'Hidden Technical Debt in ML Systems'","Full lifecycle mapped end to end","Requirements: latency, throughput, SLO, cost ceiling","Batch vs streaming vs real-time vs edge decision","Offline/online metric gap understood","Feedback and degenerate loops identified","Read Designing ML Systems (Huyen)"]},
+  {g:"Data engineering",i:["Lakehouse formats: Parquet, Delta, Iceberg","Airflow/Dagster/Prefect DAGs, idempotency, backfills","dbt + medallion architecture","Streaming: Kafka, Flink, exactly-once, watermarks","Spark/Ray/Dask — and when they're needed","Data versioning: DVC / lakeFS","Validation: Great Expectations / Pandera in pipeline","Data contracts","Feature store (Feast) + online/offline consistency","Point-in-time correctness implemented","Labeling: Label Studio/Argilla, active learning"]},
+  {g:"Experiments & reproducibility",i:["MLflow or W&B tracking everything","Logged: params, metrics, code SHA, data version, seeds","Ablation tables, one variable at a time","Model registry with promotion workflow","Docker + lockfiles + pinned base images","Hydra config management","DDP / FSDP / DeepSpeed ZeRO","Per-experiment cost tracking"]},
+  {g:"Deployment & serving",i:["safetensors over pickle; ONNX/TorchScript export","FastAPI service with Pydantic validation","BentoML / Ray Serve / Triton / KServe","Dynamic batching + async + connection pooling","Inference optimization: quantize, distill, compile","Kubernetes: deployments, HPA, GPU scheduling, Helm","Serverless inference + cold start handling","Edge: ONNX Runtime / TFLite / Core ML","Shadow, canary, blue-green, feature flags","Load testing with Locust/k6; p50/p95/p99 budgets"]},
+  {g:"Monitoring & ops",i:["5 monitoring layers instrumented","RED / USE methods applied","Data drift vs concept drift vs label shift","Detection: PSI, KS, JS divergence, MMD","Delayed-label strategy designed","Evidently / NannyML dashboards","Retraining: scheduled vs triggered + validation gate","Actionable alerting + runbooks","Incident response: rollback first","Prometheus + Grafana + OpenTelemetry + structured logs"]},
+  {g:"CI/CD/CT",i:["CI: lint, types, unit tests","CI: data validation tests","CI: model behavioral tests (invariance, directional, MFT)","Testing pyramid for ML implemented","CD: staged rollout + smoke tests + auto-rollback","GitHub Actions pipeline green","Terraform infrastructure as code"]},
+  {g:"Cost, security, governance",i:["Cost model: training, inference/1k, storage, egress","FinOps: spot, right-sizing, scale-to-zero","GPU utilization as the key metric","Secrets management (Vault/KMS)","Model theft + adversarial robustness awareness","Supply-chain security for artifacts","Differential privacy / federated learning concepts","Model inventory, model cards, audit trails","Architecture diagram + design doc + ADRs"]},
+  {g:"Deliverables",i:["📦 Full platform: ingest→validate→train→register→serve","📦 Canary deploy with auto-promote/rollback in CD","📦 Monitoring dashboard: health + drift + performance","📦 Runbook for every alert","📦 Terraform-managed infrastructure","📦 Broke it 3 ways and showed detection working","✅ Exit checklist: all 10 items"]}]},
+
+ {n:8,t:"Capstones & Career",w:"Weeks 48–52",h:210,f:"phases/08-capstones-career.md",g:[
+  {g:"Capstone 1 — Classical ML",i:["Real messy data, real business framing","Baseline → features → tuned GBM","Honest CV matching held-out performance","SHAP interpretability + fairness audit","Deployed API with monitoring + drift detection","Written business case with cost of errors"]},
+  {g:"Capstone 2 — DL or GenAI",i:["Custom dataset or real corpus","Ablation study documented","Optimized, benchmarked inference","Deployed with a latency SLO","Golden eval set + measured quality","Public demo live"]},
+  {g:"Capstone 3 — Agentic",i:["Genuinely useful multi-step task","Real tools + HITL approval on writes","Full tracing + cost caps + bounded loops","Trajectory eval suite in CI with published success rate","Written reliability report (before/after)"]},
+  {g:"Every capstone",i:["README: problem, approach, results, diagram, setup","Setup verified on a clean machine","Live demo URL","2–3 minute demo video","Tests + CI badge","Blog post on one hard decision","Honest limitations + next steps section"]},
+  {g:"Portfolio & presence",i:["6 best repos pinned, abandoned ones cleaned","8–12 blog posts published","One-page résumé: 'Built X using Y achieving Z'","LinkedIn headline states what you build","3–5 merged open-source PRs","One Kaggle comp with own pipeline + writeup","Attended/spoke at a meetup"]},
+  {g:"Interview prep",i:["60–80 LeetCode easy/medium","ML-flavored coding: k-means, attention, GD in 30 min","All phase exit checklists reviewed as a question bank","ML system design: 10-step framework internalized","8 system design problems practiced out loud","Project deep-dive rehearsed for each capstone","8–10 STAR behavioral stories prepared","Questions prepared about their ML maturity"]},
+  {g:"Sustaining",i:["Weekly paper habit established","Monthly new-technique implementation","Newsletter/blog intake list set up","Depth direction chosen for year 2"]},
+  {g:"Final",i:["✅ All 10 final exit checklist items ticked"]}]}
+];
+
+const KEY="mljourney_v1";
+let state = JSON.parse(localStorage.getItem(KEY) || "{}");
+const save = () => localStorage.setItem(KEY, JSON.stringify(state));
+const idOf = (p,g,i) => `${p}.${g}.${i}`;
+
+const root = document.getElementById("phases");
+
+DATA.forEach(p=>{
+  const el = document.createElement("div");
+  el.className = "phase";
+  el.dataset.p = p.n;
+  const total = p.g.reduce((a,g)=>a+g.i.length,0);
+  el.innerHTML = `
+    <div class="phead">
+      <div class="pnum">${p.n}</div>
+      <div class="pinfo">
+        <div class="ptitle">${p.t}</div>
+        <div class="pmeta">${p.w} · ~${p.h} hrs · ${total} items ·
+          <a class="link" href="${p.f}">open guide →</a></div>
+      </div>
+      <div class="pbar bar"><i></i></div>
+      <div class="ppct">0%</div>
+      <div class="caret">▶</div>
+    </div>
+    <div class="pbody">
+      ${p.g.map((g,gi)=>`
+        <div class="grp">${g.g}</div>
+        ${g.i.map((t,ii)=>{
+          const id=idOf(p.n,gi,ii);
+          return `<label class="item" data-id="${id}">
+            <input type="checkbox" ${state[id]?"checked":""}>
+            <span>${t}</span></label>`;
+        }).join("")}
+      `).join("")}
+      <div class="note">
+        <div class="grp">Notes</div>
+        <textarea data-note="n${p.n}" placeholder="What broke this phase? What surprised you?"></textarea>
+      </div>
+    </div>`;
+  root.appendChild(el);
+
+  el.querySelector(".phead").addEventListener("click", e=>{
+    if(e.target.tagName==="A") return;
+    el.classList.toggle("open");
+  });
+
+  const ta = el.querySelector("textarea");
+  ta.value = state["n"+p.n] || "";
+  ta.addEventListener("input", ()=>{ state["n"+p.n]=ta.value; save(); });
+});
+
+root.addEventListener("change", e=>{
+  if(e.target.type!=="checkbox") return;
+  const lab = e.target.closest(".item");
+  state[lab.dataset.id] = e.target.checked;
+  if(!e.target.checked) delete state[lab.dataset.id];
+  save(); render();
+});
+
+function render(){
+  let done=0, total=0, phasesDone=0, hours=0, current=null;
+  DATA.forEach(p=>{
+    const el = root.querySelector(`.phase[data-p="${p.n}"]`);
+    let pd=0, pt=0;
+    p.g.forEach((g,gi)=>g.i.forEach((_,ii)=>{
+      pt++; if(state[idOf(p.n,gi,ii)]) pd++;
+    }));
+    const pctv = pt? pd/pt : 0;
+    el.querySelector(".pbar i").style.width = (pctv*100)+"%";
+    el.querySelector(".ppct").textContent = Math.round(pctv*100)+"%";
+    el.classList.toggle("done", pd===pt && pt>0);
+    if(pd===pt && pt>0) phasesDone++;
+    if(current===null && pd<pt) current=p;
+    hours += pctv*p.h;
+    done+=pd; total+=pt;
+    el.querySelectorAll(".item").forEach(l=>
+      l.classList.toggle("checked", !!state[l.dataset.id]));
+  });
+  const pct = total? done/total : 0;
+  document.getElementById("pct").textContent = Math.round(pct*100)+"%";
+  document.getElementById("obar").style.width = (pct*100)+"%";
+  document.getElementById("sDone").textContent = done;
+  document.getElementById("sLeft").textContent = total-done;
+  document.getElementById("sWeek").textContent = Math.min(52, Math.floor(pct*52)+1);
+  document.getElementById("sHours").textContent = Math.round(hours);
+  document.getElementById("sPhases").textContent = phasesDone+" / 9";
+  document.getElementById("phasenow").textContent =
+    current ? `Now: Phase ${current.n} — ${current.t}` : "🎉 All phases complete";
+}
+
+document.getElementById("theme").addEventListener("click", e=>{
+  document.body.classList.toggle("light");
+  const light = document.body.classList.contains("light");
+  e.target.textContent = light ? "Dark mode" : "Light mode";
+  state._light = light; save();
+});
+if(state._light){ document.body.classList.add("light");
+  document.getElementById("theme").textContent="Dark mode"; }
+
+document.getElementById("expand").addEventListener("click", e=>{
+  const anyClosed = [...root.querySelectorAll(".phase")].some(p=>!p.classList.contains("open"));
+  root.querySelectorAll(".phase").forEach(p=>p.classList.toggle("open", anyClosed));
+  e.target.textContent = anyClosed ? "Collapse all" : "Expand all";
+});
+
+document.getElementById("export").addEventListener("click", ()=>{
+  const blob = new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "ml-journey-progress.json";
+  a.click();
+});
+
+document.getElementById("reset").addEventListener("click", ()=>{
+  if(!confirm("Erase all progress? This cannot be undone.")) return;
+  state={}; save(); location.reload();
+});
+
+// open the first incomplete phase on load
+render();
+(function openCurrent(){
+  for(const p of DATA){
+    let pd=0, pt=0;
+    p.g.forEach((g,gi)=>g.i.forEach((_,ii)=>{ pt++; if(state[idOf(p.n,gi,ii)]) pd++; }));
+    if(pd<pt){ root.querySelector(`.phase[data-p="${p.n}"]`).classList.add("open"); break; }
+  }
+})();
+</script>
+</body>
+</html>
