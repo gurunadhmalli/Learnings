@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML Notes — Learning & Interview Reference</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#161922; --border:#2a2f3a; --text:#e6e9ef;
+    --muted:#9aa4b2; --accent:#4da3ff; --accent2:#7ee0c1; --code-bg:#1c2029;
+    --warn:#ffb454;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:"Segoe UI",Arial,sans-serif; background:var(--bg);
+    color:var(--text); line-height:1.6; display:flex; min-height:100vh;
+  }
+  nav#toc{
+    width:270px; flex-shrink:0; background:var(--panel); border-right:1px solid var(--border);
+    padding:20px 14px; position:sticky; top:0; height:100vh; overflow-y:auto;
+  }
+  nav#toc h2{font-size:15px; color:var(--accent); margin:0 0 12px;}
+  nav#toc ul{list-style:none; padding:0; margin:0;}
+  nav#toc li{margin:2px 0;}
+  nav#toc a{color:var(--muted); text-decoration:none; font-size:13.5px; display:block; padding:4px 8px; border-radius:5px;}
+  nav#toc a:hover{background:#20242f; color:var(--text);}
+  main{flex:1; padding:36px 48px; max-width:920px;}
+  h1.page-title{font-size:28px; margin-bottom:4px;}
+  .subtitle{color:var(--muted); margin-bottom:32px; font-size:14px;}
+  section{margin-bottom:44px; padding-top:8px; border-top:1px solid var(--border);}
+  section:first-of-type{border-top:none;}
+  h2{color:var(--accent); font-size:21px; margin-top:0;}
+  h3{color:var(--accent2); font-size:16px; margin-bottom:6px;}
+  p{margin:8px 0;}
+  code{
+    background:var(--code-bg); color:#ffd479; padding:2px 6px; border-radius:4px;
+    font-family:"Cascadia Code",Consolas,monospace; font-size:13px;
+  }
+  pre{
+    background:var(--code-bg); border:1px solid var(--border); border-radius:8px;
+    padding:14px 16px; overflow-x:auto; font-size:13px;
+  }
+  pre code{background:none; padding:0; color:#d7dde5;}
+  table{border-collapse:collapse; width:100%; margin:10px 0 18px; font-size:13.5px;}
+  th,td{border:1px solid var(--border); padding:7px 10px; text-align:left;}
+  th{background:#1a1e28; color:var(--accent2);}
+  tr:nth-child(even){background:#151822;}
+  .note{
+    background:#182233; border-left:3px solid var(--accent); padding:10px 14px;
+    border-radius:4px; margin:12px 0; font-size:13.5px;
+  }
+  .warn{
+    background:#2a2013; border-left:3px solid var(--warn); padding:10px 14px;
+    border-radius:4px; margin:12px 0; font-size:13.5px;
+  }
+  details{
+    background:#161a24; border:1px solid var(--border); border-radius:6px;
+    padding:10px 14px; margin:10px 0;
+  }
+  details summary{cursor:pointer; font-weight:600; color:var(--accent);}
+  details p{margin-top:8px;}
+  ul,ol{padding-left:22px;}
+  .badge{
+    display:inline-block; font-size:11px; padding:1px 7px; border-radius:10px;
+    background:#22304a; color:var(--accent); margin-left:6px;
+  }
+  hr.sep{border:none; border-top:1px dashed var(--border); margin:20px 0;}
+  @media (max-width:800px){
+    body{flex-direction:column;}
+    nav#toc{position:relative; height:auto; width:auto;}
+    main{padding:24px;}
+  }
+</style>
+</head>
+<body>
+
+<nav id="toc">
+  <h2>Contents</h2>
+  <ul>
+    <li><a href="#intro">1. Introduction to HTML</a></li>
+    <li><a href="#structure">2. Document Structure & Meta</a></li>
+    <li><a href="#elements">3. Elements, Tags & Attributes</a></li>
+    <li><a href="#text">4. Text Content Elements</a></li>
+    <li><a href="#inline-format">5. Inline Text Formatting</a></li>
+    <li><a href="#block-inline">6. Block vs Inline vs Inline-Block</a></li>
+    <li><a href="#lists">7. Lists</a></li>
+    <li><a href="#links">8. Links & Navigation</a></li>
+    <li><a href="#media">9. Images & Media</a></li>
+    <li><a href="#tables">10. Tables</a></li>
+    <li><a href="#forms">11. Forms</a></li>
+    <li><a href="#semantic">12. Semantic HTML5</a></li>
+    <li><a href="#embed">13. Iframes & Embeds</a></li>
+    <li><a href="#entities">14. Entities & Comments</a></li>
+    <li><a href="#a11y">15. Accessibility (a11y)</a></li>
+    <li><a href="#seo">16. SEO Basics</a></li>
+    <li><a href="#deprecated">17. Deprecated Tags & HTML5 Changes</a></li>
+    <li><a href="#storage">18. Web Storage (Cookies/Local/Session)</a></li>
+    <li><a href="#interview">19. Interview Q&A</a></li>
+  </ul>
+</nav>
+
+<main>
+  <h1 class="page-title">HTML — Complete Notes</h1>
+  <p class="subtitle">Learning + interview reference. Covers structure, elements, forms, semantics, accessibility, and common interview questions.</p>
+
+  <section id="intro">
+    <h2>1. Introduction to HTML</h2>
+    <p><strong>HTML (HyperText Markup Language)</strong> is the standard markup language used to structure content on the web. It is not a programming language — it has no logic/conditionals — it describes the <em>structure and meaning</em> of content using elements (tags). Browsers parse HTML into the <strong>DOM (Document Object Model)</strong>, which CSS styles and JavaScript manipulates.</p>
+    <ul>
+      <li><strong>Current version:</strong> HTML5 (living standard maintained by WHATWG, with W3C also publishing).</li>
+      <li><strong>Markup language</strong>, not a scripting/programming language — no variables, loops, or conditions.</li>
+      <li>HTML + CSS + JavaScript = the three core front-end web technologies (structure, presentation, behavior).</li>
+    </ul>
+    <h3>Minimal Boilerplate</h3>
+    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Page Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Hello World&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+    <div class="note">Note: <code>&lt;!DOCTYPE html&gt;</code> is not an HTML tag — it's an instruction telling the browser to render the page in <strong>standards mode</strong> (HTML5) instead of "quirks mode" (legacy, inconsistent rendering).</div>
+  </section>
+
+  <section id="structure">
+    <h2>2. Document Structure & Meta Tags</h2>
+    <table>
+      <tr><th>Tag/Attribute</th><th>Purpose</th></tr>
+      <tr><td><code>&lt;html lang="en"&gt;</code></td><td>Root element; <code>lang</code> helps screen readers & SEO.</td></tr>
+      <tr><td><code>&lt;head&gt;</code></td><td>Metadata container — not rendered visually.</td></tr>
+      <tr><td><code>&lt;meta charset="UTF-8"&gt;</code></td><td>Character encoding — must be one of the first tags in <code>&lt;head&gt;</code>.</td></tr>
+      <tr><td><code>&lt;meta name="viewport" ...&gt;</code></td><td>Controls layout scaling on mobile devices; essential for responsive design.</td></tr>
+      <tr><td><code>&lt;title&gt;</code></td><td>Text shown on browser tab & search engine result title.</td></tr>
+      <tr><td><code>&lt;meta name="description"&gt;</code></td><td>Text search engines show under the title in results (SEO).</td></tr>
+      <tr><td><code>&lt;link rel="stylesheet"&gt;</code></td><td>Links external CSS files.</td></tr>
+      <tr><td><code>&lt;link rel="icon"&gt;</code></td><td>Favicon (browser tab icon).</td></tr>
+      <tr><td><code>&lt;script&gt;</code></td><td>Embeds/links JavaScript. Use <code>defer</code> to run after HTML parsing without blocking.</td></tr>
+      <tr><td><code>&lt;body&gt;</code></td><td>All visible page content.</td></tr>
+    </table>
+    <pre><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+&lt;meta name="description" content="Short summary of the page for search engines"&gt;
+&lt;script src="app.js" defer&gt;&lt;/script&gt;</code></pre>
+  </section>
+
+  <section id="elements">
+    <h2>3. Elements, Tags & Attributes</h2>
+    <p>An <strong>element</strong> = opening tag + content + closing tag: <code>&lt;p&gt;text&lt;/p&gt;</code>. A <strong>tag</strong> is just the markup itself (<code>&lt;p&gt;</code>). <strong>Attributes</strong> live inside the opening tag as <code>name="value"</code> pairs and provide extra info/behavior.</p>
+
+    <h3>Void (self-closing) elements</h3>
+    <p>These have no closing tag and no children: <code>&lt;br&gt;</code>, <code>&lt;hr&gt;</code>, <code>&lt;img&gt;</code>, <code>&lt;input&gt;</code>, <code>&lt;meta&gt;</code>, <code>&lt;link&gt;</code>, <code>&lt;source&gt;</code>, <code>&lt;col&gt;</code>, <code>&lt;area&gt;</code>, <code>&lt;wbr&gt;</code>, <code>&lt;track&gt;</code>, <code>&lt;embed&gt;</code>, <code>&lt;base&gt;</code>.</p>
+
+    <h3>Global Attributes (usable on almost any element)</h3>
+    <table>
+      <tr><th>Attribute</th><th>Use</th></tr>
+      <tr><td><code>id</code></td><td>Unique identifier — one per page — used for anchors, CSS, JS <code>getElementById</code>.</td></tr>
+      <tr><td><code>class</code></td><td>Non-unique grouping label — reusable across many elements — used for CSS/JS.</td></tr>
+      <tr><td><code>style</code></td><td>Inline CSS (avoid for maintainability; fine for quick tests).</td></tr>
+      <tr><td><code>title</code></td><td>Tooltip text shown on hover.</td></tr>
+      <tr><td><code>data-*</code></td><td>Custom data attributes, e.g. <code>data-user-id="42"</code>, read via JS <code>element.dataset.userId</code>.</td></tr>
+      <tr><td><code>hidden</code></td><td>Boolean — hides element (like <code>display:none</code>).</td></tr>
+      <tr><td><code>tabindex</code></td><td>Controls keyboard-tab focus order.</td></tr>
+      <tr><td><code>contenteditable</code></td><td>Makes element editable by the user in the browser.</td></tr>
+      <tr><td><code>draggable</code></td><td>Enables HTML5 drag-and-drop.</td></tr>
+      <tr><td><code>lang</code>, <code>dir</code></td><td>Language and text direction (<code>ltr</code>/<code>rtl</code>).</td></tr>
+    </table>
+    <div class="note"><strong>id vs class:</strong> <code>id</code> must be unique per page and has higher CSS specificity; <code>class</code> can repeat and is meant for reusable styling/grouping.</div>
+  </section>
+
+  <section id="text">
+    <h2>4. Text Content Elements</h2>
+    <table>
+      <tr><th>Tag</th><th>Meaning</th></tr>
+      <tr><td><code>&lt;h1&gt;</code>–<code>&lt;h6&gt;</code></td><td>Headings, in decreasing importance. Use only <strong>one <code>&lt;h1&gt;</code> per page</strong> for SEO/accessibility; don't skip levels just for size.</td></tr>
+      <tr><td><code>&lt;p&gt;</code></td><td>Paragraph — block-level.</td></tr>
+      <tr><td><code>&lt;br&gt;</code></td><td>Line break within text (not for spacing between blocks — use CSS margin instead).</td></tr>
+      <tr><td><code>&lt;hr&gt;</code></td><td>Thematic break / horizontal rule.</td></tr>
+      <tr><td><code>&lt;blockquote&gt;</code></td><td>Long quoted block from another source, usually indented.</td></tr>
+      <tr><td><code>&lt;pre&gt;</code></td><td>Preformatted text — preserves whitespace & line breaks exactly as typed.</td></tr>
+      <tr><td><code>&lt;code&gt;</code></td><td>Inline code snippet (monospace).</td></tr>
+    </table>
+    <div class="warn">Headings should reflect document <strong>outline/structure</strong>, not just desired font size — use CSS to change appearance, not the wrong heading level.</div>
+  </section>
+
+  <section id="inline-format">
+    <h2>5. Inline Text Formatting (Semantic)</h2>
+    <table>
+      <tr><th>Tag</th><th>Meaning</th><th>Visually similar but non-semantic</th></tr>
+      <tr><td><code>&lt;strong&gt;</code></td><td>Strong importance (screen readers emphasize it)</td><td><code>&lt;b&gt;</code> (bold, no semantic weight)</td></tr>
+      <tr><td><code>&lt;em&gt;</code></td><td>Stressed emphasis (changes meaning of sentence)</td><td><code>&lt;i&gt;</code> (italic, no semantic weight)</td></tr>
+      <tr><td><code>&lt;mark&gt;</code></td><td>Highlighted/relevant text</td><td>—</td></tr>
+      <tr><td><code>&lt;small&gt;</code></td><td>Side comments, fine print</td><td>—</td></tr>
+      <tr><td><code>&lt;del&gt;</code> / <code>&lt;ins&gt;</code></td><td>Deleted / inserted content (e.g. edit tracking)</td><td><code>&lt;s&gt;</code> = strikethrough w/o that meaning</td></tr>
+      <tr><td><code>&lt;sub&gt;</code> / <code>&lt;sup&gt;</code></td><td>Subscript / superscript (H<sub>2</sub>O, x<sup>2</sup>)</td><td>—</td></tr>
+      <tr><td><code>&lt;abbr title="..."&gt;</code></td><td>Abbreviation with expansion tooltip</td><td>—</td></tr>
+      <tr><td><code>&lt;cite&gt;</code></td><td>Title of a work (book, article)</td><td>—</td></tr>
+      <tr><td><code>&lt;q&gt;</code></td><td>Short inline quotation (auto-adds quote marks)</td><td>—</td></tr>
+      <tr><td><code>&lt;span&gt;</code></td><td>Generic inline container with no meaning — used purely for styling/scripting hooks</td><td>—</td></tr>
+    </table>
+    <div class="note"><strong>Interview favorite:</strong> <code>&lt;strong&gt;/&lt;em&gt;</code> are semantic (convey meaning to assistive tech & SEO); <code>&lt;b&gt;/&lt;i&gt;</code> are purely presentational.</div>
+  </section>
+
+  <section id="block-inline">
+    <h2>6. Block vs Inline vs Inline-Block</h2>
+    <table>
+      <tr><th>Type</th><th>Behavior</th><th>Examples</th></tr>
+      <tr><td><strong>Block</strong></td><td>Starts on a new line, takes full available width by default, respects width/height/margin/padding on all sides.</td><td><code>div, p, h1-h6, ul, ol, li, table, form, section, header, footer</code></td></tr>
+      <tr><td><strong>Inline</strong></td><td>Flows within text, only takes as much width as content needs, <strong>ignores width/height</strong> and top/bottom margin.</td><td><code>span, a, strong, em, img*, label, input*</code></td></tr>
+      <tr><td><strong>Inline-block</strong></td><td>Flows inline like text but respects width/height/margin/padding.</td><td>Set via CSS <code>display:inline-block</code> (e.g. <code>img</code>, <code>button</code> default to this-ish behavior)</td></tr>
+    </table>
+    <p><code>*</code> <code>img</code> and <code>input</code> are technically "replaced inline elements" — inline by default but they do honor width/height because their content is external.</p>
+  </section>
+
+  <section id="lists">
+    <h2>7. Lists</h2>
+    <pre><code>&lt;!-- Unordered --&gt;
+&lt;ul&gt;
+  &lt;li&gt;Tea&lt;/li&gt;
+  &lt;li&gt;Coffee&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!-- Ordered --&gt;
+&lt;ol start="3" type="A"&gt;
+  &lt;li&gt;Step one&lt;/li&gt;
+  &lt;li&gt;Step two&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!-- Description list --&gt;
+&lt;dl&gt;
+  &lt;dt&gt;HTML&lt;/dt&gt;
+  &lt;dd&gt;Markup language for structuring web content&lt;/dd&gt;
+&lt;/dl&gt;</code></pre>
+    <ul>
+      <li><code>&lt;ul&gt;</code> = unordered (bullets), <code>&lt;ol&gt;</code> = ordered (numbers/letters), <code>&lt;dl&gt;</code> = description/definition list (<code>dt</code> = term, <code>dd</code> = description).</li>
+      <li>Lists can be nested by placing a full <code>&lt;ul&gt;/&lt;ol&gt;</code> inside an <code>&lt;li&gt;</code>.</li>
+      <li><code>ol</code> attributes: <code>start</code>, <code>reversed</code>, <code>type</code> (1, A, a, I, i).</li>
+    </ul>
+  </section>
+
+  <section id="links">
+    <h2>8. Links & Navigation</h2>
+    <pre><code>&lt;a href="https://example.com" target="_blank" rel="noopener noreferrer"&gt;Visit&lt;/a&gt;
+&lt;a href="mailto:someone@example.com"&gt;Email us&lt;/a&gt;
+&lt;a href="tel:+911234567890"&gt;Call us&lt;/a&gt;
+&lt;a href="#section2"&gt;Jump to Section 2&lt;/a&gt;
+&lt;a href="file.pdf" download&gt;Download PDF&lt;/a&gt;</code></pre>
+    <table>
+      <tr><th>Attribute</th><th>Purpose</th></tr>
+      <tr><td><code>href</code></td><td>Destination URL, anchor (<code>#id</code>), <code>mailto:</code>, <code>tel:</code>, or file path.</td></tr>
+      <tr><td><code>target="_blank"</code></td><td>Opens link in a new tab.</td></tr>
+      <tr><td><code>rel="noopener noreferrer"</code></td><td><strong>Security best practice</strong> with <code>target="_blank"</code> — prevents the new page from accessing <code>window.opener</code> (tab-nabbing risk).</td></tr>
+      <tr><td><code>download</code></td><td>Forces browser to download instead of navigate.</td></tr>
+    </table>
+    <div class="warn">Interview note: always pair <code>target="_blank"</code> with <code>rel="noopener"</code> to avoid a known security vulnerability (reverse tabnabbing).</div>
+  </section>
+
+  <section id="media">
+    <h2>9. Images & Media</h2>
+    <pre><code>&lt;img src="photo.jpg" alt="Description of image" width="300" height="200" loading="lazy"&gt;
+
+&lt;figure&gt;
+  &lt;img src="chart.png" alt="Sales chart"&gt;
+  &lt;figcaption&gt;Fig 1. Quarterly sales&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;!-- Responsive images --&gt;
+&lt;img src="small.jpg" srcset="small.jpg 480w, large.jpg 1024w"
+     sizes="(max-width: 600px) 480px, 1024px" alt="Responsive"&gt;
+
+&lt;picture&gt;
+  &lt;source srcset="img.webp" type="image/webp"&gt;
+  &lt;img src="img.jpg" alt="Fallback"&gt;
+&lt;/picture&gt;
+
+&lt;video controls width="400"&gt;
+  &lt;source src="movie.mp4" type="video/mp4"&gt;
+  Your browser doesn't support video.
+&lt;/video&gt;
+
+&lt;audio controls&gt;
+  &lt;source src="sound.mp3" type="audio/mpeg"&gt;
+&lt;/audio&gt;</code></pre>
+    <ul>
+      <li><code>alt</code> is <strong>mandatory for accessibility</strong> — describes the image for screen readers and shows if the image fails to load. Use <code>alt=""</code> (empty) for purely decorative images.</li>
+      <li><code>loading="lazy"</code> defers off-screen image loading — improves performance.</li>
+      <li><code>picture</code>/<code>source</code> let you serve different formats/resolutions based on browser support or screen size.</li>
+      <li><code>video</code>/<code>audio</code>: <code>controls</code> shows the native player UI; multiple <code>&lt;source&gt;</code> tags provide format fallbacks.</li>
+    </ul>
+  </section>
+
+  <section id="tables">
+    <h2>10. Tables</h2>
+    <pre><code>&lt;table&gt;
+  &lt;caption&gt;Employee List&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Name&lt;/th&gt;
+      &lt;th&gt;Email&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Gurunadh&lt;/td&gt;
+      &lt;td colspan="1"&gt;gurunadhmalli55@gmail.com&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tfoot&gt;
+    &lt;tr&gt;&lt;td colspan="2"&gt;End of list&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tfoot&gt;
+&lt;/table&gt;</code></pre>
+    <table>
+      <tr><th>Tag</th><th>Purpose</th></tr>
+      <tr><td><code>&lt;table&gt;</code></td><td>Table container</td></tr>
+      <tr><td><code>&lt;tr&gt;</code></td><td>Table row</td></tr>
+      <tr><td><code>&lt;th&gt;</code></td><td>Header cell (bold, centered by default; use <code>scope="col"/"row"</code> for accessibility)</td></tr>
+      <tr><td><code>&lt;td&gt;</code></td><td>Data cell</td></tr>
+      <tr><td><code>&lt;thead&gt;/&lt;tbody&gt;/&lt;tfoot&gt;</code></td><td>Groups rows semantically — helps styling, printing (repeating headers), and accessibility</td></tr>
+      <tr><td><code>&lt;caption&gt;</code></td><td>Table title, read by screen readers</td></tr>
+      <tr><td><code>colspan</code> / <code>rowspan</code></td><td>Merge cells across columns/rows</td></tr>
+      <tr><td><code>&lt;col&gt;/&lt;colgroup&gt;</code></td><td>Apply styling to entire columns</td></tr>
+    </table>
+    <div class="note">Never use tables for page layout (old practice) — use CSS Grid/Flexbox for layout; reserve <code>&lt;table&gt;</code> strictly for tabular data.</div>
+  </section>
+
+  <section id="forms">
+    <h2>11. Forms</h2>
+    <h3>Form container</h3>
+    <pre><code>&lt;form action="/submit" method="POST" enctype="multipart/form-data"&gt;
+  ...
+&lt;/form&gt;</code></pre>
+    <table>
+      <tr><th>Attribute</th><th>Purpose</th></tr>
+      <tr><td><code>action</code></td><td>URL the form data is sent to.</td></tr>
+      <tr><td><code>method</code></td><td><code>GET</code> (data in URL query string, visible, bookmarkable, size-limited) or <code>POST</code> (data in request body, hidden, no size limit — used for sensitive/large data).</td></tr>
+      <tr><td><code>enctype</code></td><td><code>application/x-www-form-urlencoded</code> (default) or <code>multipart/form-data</code> (required for file uploads).</td></tr>
+      <tr><td><code>novalidate</code></td><td>Disables browser's built-in validation.</td></tr>
+    </table>
+
+    <h3>Input Types</h3>
+    <pre><code>&lt;input type="text"&gt;
+&lt;input type="password"&gt;
+&lt;input type="email"&gt;
+&lt;input type="number" min="1" max="10"&gt;
+&lt;input type="date"&gt;
+&lt;input type="checkbox" name="agree" checked&gt;
+&lt;input type="radio" name="gender" value="m"&gt;
+&lt;input type="file" accept="image/*" multiple&gt;
+&lt;input type="range" min="0" max="100"&gt;
+&lt;input type="color"&gt;
+&lt;input type="hidden" name="token" value="abc"&gt;
+&lt;input type="search"&gt;
+&lt;input type="tel"&gt;
+&lt;input type="url"&gt;
+&lt;input type="submit" value="Send"&gt;
+&lt;input type="reset"&gt;</code></pre>
+
+    <h3>Other Form Elements</h3>
+    <pre><code>&lt;label for="email"&gt;Email&lt;/label&gt;
+&lt;input type="email" id="email" name="email" required&gt;
+
+&lt;textarea rows="4" cols="30" placeholder="Type here..."&gt;&lt;/textarea&gt;
+
+&lt;select name="games"&gt;
+  &lt;optgroup label="Outdoor"&gt;
+    &lt;option value="cricket"&gt;Cricket&lt;/option&gt;
+    &lt;option value="football"&gt;Football&lt;/option&gt;
+  &lt;/optgroup&gt;
+&lt;/select&gt;
+
+&lt;fieldset&gt;
+  &lt;legend&gt;Personal Info&lt;/legend&gt;
+  &lt;!-- grouped inputs --&gt;
+&lt;/fieldset&gt;
+
+&lt;input list="browsers" name="browser"&gt;
+&lt;datalist id="browsers"&gt;
+  &lt;option value="Chrome"&gt;
+  &lt;option value="Firefox"&gt;
+&lt;/datalist&gt;
+
+&lt;button type="submit"&gt;Submit&lt;/button&gt;
+&lt;button type="button" onclick="doThing()"&gt;Click me&lt;/button&gt;</code></pre>
+
+    <div class="note">
+      <strong><code>&lt;label for="id"&gt;</code> must match the input's <code>id</code></strong> — this associates them so clicking the label focuses/toggles the input, and screen readers announce the label. Wrapping the input inside the label also works without <code>for</code>/<code>id</code>, but explicit association is the more robust/testable pattern.
+    </div>
+
+    <h3>Native Validation Attributes</h3>
+    <table>
+      <tr><th>Attribute</th><th>Effect</th></tr>
+      <tr><td><code>required</code></td><td>Field must be filled before submit.</td></tr>
+      <tr><td><code>minlength</code> / <code>maxlength</code></td><td>Character length limits.</td></tr>
+      <tr><td><code>min</code> / <code>max</code></td><td>Numeric/date range limits.</td></tr>
+      <tr><td><code>pattern</code></td><td>Regex the value must match.</td></tr>
+      <tr><td><code>placeholder</code></td><td>Hint text inside empty field (not a substitute for <code>label</code>).</td></tr>
+      <tr><td><code>disabled</code></td><td>Field can't be interacted with and isn't submitted.</td></tr>
+      <tr><td><code>readonly</code></td><td>Field can't be edited but <em>is</em> submitted (unlike disabled).</td></tr>
+      <tr><td><code>autofocus</code></td><td>Auto-focuses field on page load.</td></tr>
+    </table>
+    <div class="warn"><strong>disabled vs readonly:</strong> a <code>disabled</code> input's value is <em>not</em> sent on form submit; a <code>readonly</code> input's value <em>is</em> sent. Common interview trap.</div>
+  </section>
+
+  <section id="semantic">
+    <h2>12. Semantic HTML5</h2>
+    <p>Semantic elements clearly describe their meaning to both the browser and the developer — improving accessibility, SEO, and code readability, vs. generic <code>&lt;div&gt;</code>/<code>&lt;span&gt;</code> soup.</p>
+    <table>
+      <tr><th>Tag</th><th>Meaning</th></tr>
+      <tr><td><code>&lt;header&gt;</code></td><td>Introductory content / navigation for a page or section.</td></tr>
+      <tr><td><code>&lt;nav&gt;</code></td><td>Major navigation links block.</td></tr>
+      <tr><td><code>&lt;main&gt;</code></td><td>The dominant, unique content of the page — one per page.</td></tr>
+      <tr><td><code>&lt;section&gt;</code></td><td>Thematic grouping of content, usually with a heading.</td></tr>
+      <tr><td><code>&lt;article&gt;</code></td><td>Self-contained, independently distributable content (blog post, news story, comment).</td></tr>
+      <tr><td><code>&lt;aside&gt;</code></td><td>Tangential content (sidebar, pull quote, ads).</td></tr>
+      <tr><td><code>&lt;footer&gt;</code></td><td>Footer content for page/section (contact info, copyright).</td></tr>
+      <tr><td><code>&lt;figure&gt;/&lt;figcaption&gt;</code></td><td>Self-contained media with a caption.</td></tr>
+      <tr><td><code>&lt;details&gt;/&lt;summary&gt;</code></td><td>Native collapsible disclosure widget — no JS needed.</td></tr>
+      <tr><td><code>&lt;time datetime="..."&gt;</code></td><td>Machine-readable date/time.</td></tr>
+      <tr><td><code>&lt;dialog&gt;</code></td><td>Native modal/popup dialog box.</td></tr>
+    </table>
+    <div class="note"><strong>article vs section:</strong> use <code>article</code> when the content could stand alone and be syndicated on its own (a blog post); use <code>section</code> for a themed chunk that's part of a larger whole and doesn't make sense out of context.</div>
+    <details>
+      <summary>Example: details/summary (try it — this is real interactive HTML, no JS)</summary>
+      <p>This content is hidden until the summary is clicked. Great for FAQs and accordions without JavaScript.</p>
+    </details>
+  </section>
+
+  <section id="embed">
+    <h2>13. Iframes & Embeds</h2>
+    <pre><code>&lt;iframe src="https://example.com" width="600" height="400"
+        title="Embedded content" loading="lazy" sandbox&gt;&lt;/iframe&gt;</code></pre>
+    <ul>
+      <li><code>&lt;iframe&gt;</code> embeds another full HTML document inside the current page (e.g. YouTube embeds, maps).</li>
+      <li><code>&lt;embed&gt;</code> / <code>&lt;object&gt;</code> embed external resources (PDFs, Flash-era plugins, SVG) — <code>object</code> supports fallback content, <code>embed</code> doesn't.</li>
+      <li><code>sandbox</code> attribute restricts what the embedded page can do (scripts, forms, popups) — important for security when embedding untrusted content.</li>
+      <li>Always give an iframe a <code>title</code> for accessibility.</li>
+    </ul>
+  </section>
+
+  <section id="entities">
+    <h2>14. Entities & Comments</h2>
+    <p>HTML entities represent reserved or special characters that would otherwise be interpreted as markup.</p>
+    <table>
+      <tr><th>Entity</th><th>Renders</th><th>Meaning</th></tr>
+      <tr><td><code>&amp;lt;</code></td><td>&lt;</td><td>less than / start of tag</td></tr>
+      <tr><td><code>&amp;gt;</code></td><td>&gt;</td><td>greater than / end of tag</td></tr>
+      <tr><td><code>&amp;amp;</code></td><td>&amp;</td><td>ampersand</td></tr>
+      <tr><td><code>&amp;nbsp;</code></td><td>(space)</td><td>non-breaking space</td></tr>
+      <tr><td><code>&amp;quot;</code></td><td>"</td><td>double quote</td></tr>
+      <tr><td><code>&amp;copy;</code></td><td>©</td><td>copyright symbol</td></tr>
+    </table>
+    <p>Comments: <code>&lt;!-- this is not rendered, visible only in source --&gt;</code> — useful for notes and temporarily disabling markup during development.</p>
+  </section>
+
+  <section id="a11y">
+    <h2>15. Accessibility (a11y)</h2>
+    <ul>
+      <li>Use <strong>semantic HTML first</strong> — a native <code>&lt;button&gt;</code> is keyboard-accessible and announced correctly by screen readers automatically; a <code>&lt;div onclick&gt;</code> is not, by default.</li>
+      <li>Every <code>&lt;img&gt;</code> needs meaningful <code>alt</code> text (or <code>alt=""</code> if purely decorative).</li>
+      <li>Every form input needs an associated <code>&lt;label&gt;</code>.</li>
+      <li><strong>ARIA</strong> (Accessible Rich Internet Applications) attributes like <code>role</code>, <code>aria-label</code>, <code>aria-hidden</code>, <code>aria-expanded</code> fill gaps when semantic HTML alone isn't enough (e.g. custom widgets) — the golden rule: <em>"No ARIA is better than bad ARIA"</em> — prefer native elements first.</li>
+      <li>Ensure sufficient color contrast and that the page is fully operable via keyboard (<code>tabindex</code>, focus states).</li>
+      <li><code>lang</code> attribute on <code>&lt;html&gt;</code> lets screen readers use correct pronunciation rules.</li>
+    </ul>
+  </section>
+
+  <section id="seo">
+    <h2>16. SEO Basics (HTML-level)</h2>
+    <ul>
+      <li>One clear, descriptive <code>&lt;title&gt;</code> and <code>&lt;meta name="description"&gt;</code> per page.</li>
+      <li>One <code>&lt;h1&gt;</code>, logical heading hierarchy (<code>h2</code> nested under <code>h1</code>, etc.) — helps search engines understand content structure.</li>
+      <li>Descriptive <code>alt</code> text on images (also helps image search).</li>
+      <li>Semantic elements (<code>article</code>, <code>nav</code>, <code>main</code>) help crawlers understand page structure.</li>
+      <li>Meaningful, descriptive link text (avoid "click here").</li>
+      <li><code>&lt;link rel="canonical"&gt;</code> to avoid duplicate-content penalties.</li>
+    </ul>
+  </section>
+
+  <section id="deprecated">
+    <h2>17. Deprecated Tags & Key HTML4 → HTML5 Changes</h2>
+    <table>
+      <tr><th>Deprecated Tag</th><th>Use Instead</th></tr>
+      <tr><td><code>&lt;font&gt;</code></td><td>CSS <code>font-family</code>/<code>color</code></td></tr>
+      <tr><td><code>&lt;center&gt;</code></td><td>CSS <code>text-align:center</code> / flexbox</td></tr>
+      <tr><td><code>&lt;marquee&gt;</code>, <code>&lt;blink&gt;</code></td><td>CSS animations</td></tr>
+      <tr><td><code>&lt;b&gt;/&lt;i&gt;</code> for emphasis</td><td><code>&lt;strong&gt;/&lt;em&gt;</code> (semantic)</td></tr>
+      <tr><td>Layout via <code>&lt;table&gt;</code></td><td>CSS Grid / Flexbox</td></tr>
+      <tr><td>Layout via nested <code>&lt;div&gt;</code> soup</td><td>Semantic elements (<code>header</code>, <code>nav</code>, <code>main</code>, etc.)</td></tr>
+    </table>
+    <p><strong>HTML5 additions:</strong> semantic tags (section/article/nav/etc.), new form input types, <code>&lt;audio&gt;/&lt;video&gt;</code> (replacing plugins like Flash), <code>&lt;canvas&gt;</code> (2D drawing via JS), inline SVG support, native drag-and-drop, geolocation/local-storage APIs, simplified <code>&lt;!DOCTYPE html&gt;</code>.</p>
+  </section>
+
+  <section id="storage">
+    <h2>18. Web Storage (Cookies / localStorage / sessionStorage)</h2>
+    <p>Not strictly "HTML tags," but closely tied to web fundamentals and a frequent interview topic alongside HTML/forms.</p>
+    <table>
+      <tr><th></th><th>Cookies</th><th>localStorage</th><th>sessionStorage</th></tr>
+      <tr><td>Capacity</td><td>~4KB</td><td>~5-10MB</td><td>~5-10MB</td></tr>
+      <tr><td>Sent to server?</td><td>Yes, with every HTTP request</td><td>No</td><td>No</td></tr>
+      <tr><td>Expiry</td><td>Manually set (can persist or expire)</td><td>Never (until cleared)</td><td>Cleared when tab closes</td></tr>
+      <tr><td>Accessed via</td><td><code>document.cookie</code></td><td><code>window.localStorage</code></td><td><code>window.sessionStorage</code></td></tr>
+    </table>
+  </section>
+
+  <section id="interview">
+    <h2>19. Interview Q&A</h2>
+
+    <details><summary>What is the difference between HTML and HTML5?</summary>
+    <p>HTML5 introduced semantic elements (header, nav, article, etc.), native audio/video support, canvas for graphics, new form input types & validation attributes, offline/local storage APIs, and removed dependency on plugins like Flash. It's also more lenient/standardized in parsing across browsers.</p>
+    </details>
+
+    <details><summary>What are semantic elements and why do they matter?</summary>
+    <p>Elements whose tag name conveys meaning about their content (e.g. <code>&lt;nav&gt;</code>, <code>&lt;article&gt;</code>) rather than being purely presentational (<code>&lt;div&gt;</code>). They improve accessibility (screen readers understand structure), SEO (search engines parse content better), and code readability/maintainability.</p>
+    </details>
+
+    <details><summary>Difference between &lt;div&gt; and &lt;span&gt;?</summary>
+    <p><code>&lt;div&gt;</code> is a block-level generic container (starts new line, full width); <code>&lt;span&gt;</code> is an inline generic container (flows within text). Both carry no semantic meaning on their own.</p>
+    </details>
+
+    <details><summary>Difference between id and class?</summary>
+    <p><code>id</code> must be unique per page, used for a single specific element (anchors, JS hooks, higher CSS specificity). <code>class</code> can be reused across many elements for shared styling/behavior.</p>
+    </details>
+
+    <details><summary>What's the difference between src and href?</summary>
+    <p><code>src</code> (source) <strong>embeds/replaces</strong> the element with the external resource — used on <code>&lt;img&gt;</code>, <code>&lt;script&gt;</code>, <code>&lt;iframe&gt;</code> — the page waits for/renders that resource inline. <code>href</code> (hypertext reference) <strong>links to</strong> a resource without embedding it — used on <code>&lt;a&gt;</code>, <code>&lt;link&gt;</code> — creates a relationship/navigation, doesn't block rendering.</p>
+    </details>
+
+    <details><summary>What are void/self-closing elements? Name a few.</summary>
+    <p>Elements that cannot have children/closing tags because they represent a single point of content: <code>&lt;img&gt;</code>, <code>&lt;br&gt;</code>, <code>&lt;hr&gt;</code>, <code>&lt;input&gt;</code>, <code>&lt;meta&gt;</code>, <code>&lt;link&gt;</code>, <code>&lt;source&gt;</code>, <code>&lt;area&gt;</code>.</p>
+    </details>
+
+    <details><summary>GET vs POST in forms — when to use which?</summary>
+    <p><strong>GET</strong>: appends data to the URL as a query string; visible, bookmarkable, cacheable, size-limited (~2000 chars) — use for non-sensitive reads/searches. <strong>POST</strong>: sends data in the request body; not visible in URL, no practical size limit, not cached by default — use for sensitive data (passwords), file uploads, or data that changes server state.</p>
+    </details>
+
+    <details><summary>disabled vs readonly on a form field?</summary>
+    <p>Both prevent editing, but a <code>disabled</code> field is skipped entirely on submit (its value is not sent, and it's unfocusable/unstyleable as normal), while a <code>readonly</code> field's value <em>is</em> submitted and the field can still be focused/selected/copied.</p>
+    </details>
+
+    <details><summary>Why does &lt;label for="..."&gt; matter?</summary>
+    <p>It programmatically ties a label to its input by matching <code>for</code> to the input's <code>id</code>. This lets clicking the label focus/toggle the input and lets screen readers announce the label when the field receives focus — required for accessible, usable forms.</p>
+    </details>
+
+    <details><summary>What is the DOM?</summary>
+    <p>The Document Object Model — the browser's in-memory, tree-structured representation of the parsed HTML document. JavaScript reads/manipulates the DOM (not the raw HTML text) to change what's rendered.</p>
+    </details>
+
+    <details><summary>What does &lt;!DOCTYPE html&gt; do?</summary>
+    <p>It's a required declaration (not a tag) that tells the browser to render the page in HTML5 "standards mode" instead of the inconsistent legacy "quirks mode." It must be the very first line of the document.</p>
+    </details>
+
+    <details><summary>Block vs inline elements — how do you tell which is which, and does it matter?</summary>
+    <p>Block elements start on a new line and take full available width (div, p, h1-h6, ul); inline elements flow within the surrounding text and only take as much width as needed (span, a, strong). It matters for layout: block elements accept width/height/vertical margin, inline elements largely ignore them (this is also overridable via CSS <code>display</code>).</p>
+    </details>
+
+    <details><summary>How do you make a responsive image?</summary>
+    <p>Use <code>srcset</code> + <code>sizes</code> on <code>&lt;img&gt;</code> to let the browser choose the best resolution image for the viewport/pixel-density, or use <code>&lt;picture&gt;</code> with multiple <code>&lt;source&gt;</code> elements to serve different formats (e.g. WebP with a JPEG fallback) or art-directed crops per breakpoint.</p>
+    </details>
+
+    <details><summary>What's the purpose of the viewport meta tag?</summary>
+    <p><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code> tells mobile browsers to use the actual device width as the layout viewport width and set zoom to 100% initially — without it, mobile browsers default to a desktop-width viewport (~980px) and shrink the whole page, breaking responsive CSS.</p>
+    </details>
+
+    <details><summary>Difference between iframe and embed/object?</summary>
+    <p><code>&lt;iframe&gt;</code> embeds a full separate HTML document (its own browsing context) — e.g. a YouTube video or map. <code>&lt;embed&gt;</code>/<code>&lt;object&gt;</code> embed external non-HTML resources via a plugin/renderer (PDFs, SVGs); <code>&lt;object&gt;</code> additionally supports fallback content between its tags if the resource fails to load.</p>
+    </details>
+
+    <details><summary>What are ARIA attributes and when should you use them?</summary>
+    <p>Accessible Rich Internet Applications attributes (<code>role</code>, <code>aria-label</code>, <code>aria-hidden</code>, <code>aria-expanded</code>, etc.) add accessibility semantics that native HTML can't express — mainly needed for custom JS widgets (custom dropdowns, tabs, modals). Rule of thumb: prefer a native semantic element first; only add ARIA when no native element covers the behavior, since incorrect ARIA is worse than none.</p>
+    </details>
+
+    <details><summary>How is HTML parsed — is it case sensitive, and is it forgiving of errors?</summary>
+    <p>HTML tag/attribute names are case-insensitive (lowercase is convention/best practice), and browsers use a very forgiving/error-correcting parser (per the HTML5 parsing spec) — e.g. unclosed tags are often auto-closed based on well-defined recovery rules, unlike strict XML/XHTML which would simply fail.</p>
+    </details>
+
+    <details><summary>Cookies vs localStorage vs sessionStorage?</summary>
+    <p>Cookies (~4KB) are sent with every HTTP request to the server and can have an expiry date. <code>localStorage</code> (~5-10MB) persists indefinitely on the client only, never sent to the server automatically. <code>sessionStorage</code> behaves like localStorage but is cleared when the browser tab closes. Use cookies for data the server needs on every request (auth tokens, session IDs); use Web Storage for client-only state.</p>
+    </details>
+
+    <details><summary>What's the difference between HTML and XHTML?</summary>
+    <p>XHTML is HTML rewritten to follow strict XML syntax rules — every tag must be closed, attributes must be quoted, tags must be properly nested, and a single syntax error breaks the entire page. HTML5 is more forgiving and browser-parsed with defined error-recovery behavior, which is why HTML5 (not XHTML) became the dominant standard.</p>
+    </details>
+
+  </section>
+
+</main>
+</body>
+</html>

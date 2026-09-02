@@ -36,6 +36,9 @@ Study notes for LangChain / LangGraph, numbered in the order they're meant to be
 21. [21_LangGraph_Accumulated_State_Explanation.md](21_LangGraph_Accumulated_State_Explanation.md) — reducers and `Annotated` state
 22. [22_LangGraph_Cycles_and_Loops_Deep_Dive.md](22_LangGraph_Cycles_and_Loops_Deep_Dive.md) — deep dive: anatomy of a loop, 5 loop types (retry-until-valid, iterative-deepening, counted for-N, agentic/ReAct, human-in-the-loop), exit-condition design, `recursion_limit`/`GraphRecursionError` safety
 23. [23_LangGraph_Human_in_the_Loop_Deep_Dive.md](23_LangGraph_Human_in_the_Loop_Deep_Dive.md) — deep dive: expands 22 §7 into full HITL coverage — `MemorySaver`/checkpointer, `thread_id`, `interrupt()` + `Command(resume=...)`, full email-assistant walkthrough
+24. [24_LangGraph_Tool_Calling_and_Agents.md](24_LangGraph_Tool_Calling_and_Agents.md) — deep dive: `@tool`, `bind_tools`, reading/executing `tool_calls`, `ToolNode`, wiring the ReAct loop by hand vs. `create_react_agent` (no local code yet — see Gaps)
+25. [25_LangGraph_Advanced_Checkpointer_Patterns.md](25_LangGraph_Advanced_Checkpointer_Patterns.md) — deep dive: walks through `checkpoint.py`/`human_in_loop.py` — `interrupt_before`+`update_state()` (the static pause, vs. 23's dynamic `interrupt()`), `SqliteSaver` durability, `get_state_history()` time travel, checkpoint anatomy, branching, rewinding
+26. [26_LangGraph_MultiAgent_Handoff_Pattern.md](26_LangGraph_MultiAgent_Handoff_Pattern.md) — deep dive: walks through `agent_handsoff.py` — triage/router agent + specialist agents, `with_structured_output()` + `Literal` as a routing decision, shared context across agents, contrasted with the ReAct loop (24)
 
 ## What changed in this pass
 
@@ -47,8 +50,14 @@ Study notes for LangChain / LangGraph, numbered in the order they're meant to be
   - **12 ↔ 13** (vectors): 13 trimmed of repeated theory (distance metrics, RAG flow diagram) now owned by 12.
   - **14 / 15 / 16 / 17** (RAG): 16 is now the canonical fundamentals + full-pipeline reference; 14 and 15 trimmed down to their unique hands-on code and analogies/comparisons respectively; 17 (advanced techniques) was already distinct and left untouched.
 
+## What changed in this pass (round 2)
+
+- Added **24_LangGraph_Tool_Calling_and_Agents.md**, **25_LangGraph_Advanced_Checkpointer_Patterns.md**, and **26_LangGraph_MultiAgent_Handoff_Pattern.md** to close the gaps below (except tool-calling, which is still doc-only — see Gaps).
+- `checkpoint.py` and `human_in_loop.py` were added to the repo root since the last pass, closing the "no working code" half of the checkpointer/HITL gap — 25 documents what they actually demonstrate (SqliteSaver, time travel, branching, the older `interrupt_before`+`update_state` pause style), which goes beyond 23's `interrupt()`/`Command(resume=...)` coverage.
+- `agent_handsoff.py`'s triage/specialist routing pattern (structured-output-based multi-agent handoff) now has a dedicated doc (26) instead of no coverage at all.
+
 ## Gaps — not yet covered by any doc
 
-- Your code in the repo root (`agent_handsoff.py`, `research_assistant.py`, `langgraph_core.py`, `langgraph_full.py`) uses **tool-calling / agents** (`bind_tools`, agent handoff), but there's no study-notes file for it — only passing mentions in 05_messages.md (ToolMessage) and 18_langchain_memory_guide.md, plus a conceptual (no local code yet) walkthrough of the ReAct tool-calling loop in 22 §6. Worth a `23_agents_and_tool_calling.md` if you want notes at the same depth as the rest, covering `bind_tools`, tool schemas, the ReAct loop, and `ToolNode`/`create_react_agent` in LangGraph. Say the word and I'll draft it.
-- **Checkpointers and human-in-the-loop** (`compile(checkpointer=...)`, `interrupt()`, `Command(resume=...)`, durable/resumable state across process restarts) aren't used anywhere in the codebase yet either — now documented in depth in **23_LangGraph_Human_in_the_Loop_Deep_Dive.md**, but there's still no working local code to walk through. Would need a small demo file (e.g. `human_in_the_loop.py`) to close that gap.
-- `recursion_limit` / `GraphRecursionError` (the framework-level loop safety net, 22 §9) also isn't exercised by any current code — every existing loop relies solely on its own state-level iteration cap.
+- **Tool-calling / agents proper** (`bind_tools`, `@tool`, `ToolNode`, `create_react_agent`) is now documented in **24_LangGraph_Tool_Calling_and_Agents.md**, but it's still notes-only — grep confirms no file in the repo (`agent_handsoff.py` included) actually calls `bind_tools` or defines a `@tool`. `agent_handsoff.py`'s "handoff" is LLM-persona routing via structured output (see 26), not function/tool calling. A small demo (e.g. a calculator or weather-lookup ReAct agent) would close this for real.
+- `recursion_limit` / `GraphRecursionError` (the framework-level loop safety net, 22 §9) still isn't exercised by any current code — every existing loop (including the new checkpointed ones in `human_in_loop.py`) relies solely on its own state-level iteration cap or a human's decision to stop looping.
+- `PostgresSaver` (named as the other production checkpointer alongside `SqliteSaver` in 23 and 25) has no local code either — only `MemorySaver` and `SqliteSaver` are exercised.
