@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS Box Model and Display</title>
+    <style>
+      :root {
+        font-family: Arial, sans-serif;
+        color: #17202a;
+        background: #f4f7fb;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 32px 20px 56px;
+        line-height: 1.6;
+      }
+
+      h1,
+      h2 {
+        line-height: 1.2;
+      }
+
+      h1 {
+        color: #173f5f;
+        margin-bottom: 8px;
+      }
+
+      h2 {
+        color: #20639b;
+        margin-top: 36px;
+      }
+
+      .intro {
+        max-width: 720px;
+        font-size: 1.05rem;
+      }
+
+      .lesson-section {
+        padding: 24px;
+        margin-top: 20px;
+        background: white;
+        border: 1px solid #d9e2ec;
+        border-radius: 8px;
+      }
+
+      .box-demo {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+        margin-top: 20px;
+      }
+
+      .box {
+        width: 220px;
+        min-height: 150px;
+        padding: 24px;
+        border: 12px solid #f6c85f;
+        margin: 12px;
+        background: #d9f0ff;
+      }
+
+      .content-box {
+        box-sizing: content-box;
+      }
+
+      .border-box {
+        box-sizing: border-box;
+      }
+
+      .box strong {
+        display: block;
+        color: #173f5f;
+      }
+
+      code {
+        padding: 2px 5px;
+        background: #edf2f7;
+        border-radius: 3px;
+      }
+
+      .parts {
+        margin-top: 20px;
+        padding: 24px;
+        border: 12px solid #f6c85f;
+        background: #d9f0ff;
+      }
+
+      .parts-content {
+        padding: 16px;
+        background: #b8e0d2;
+      }
+
+      .display-demo {
+        margin-top: 20px;
+        padding: 16px;
+        background: #eef6f7;
+        border-left: 5px solid #3caea3;
+      }
+
+      .block-example {
+        display: block;
+        margin: 8px 0;
+        padding: 8px;
+        background: #f6c85f;
+      }
+
+      .inline-example {
+        display: inline;
+        padding: 8px;
+        background: #b8e0d2;
+      }
+
+      .inline-block-example {
+        display: inline-block;
+        width: 150px;
+        margin: 8px 8px 8px 0;
+        padding: 8px;
+        background: #d9f0ff;
+        vertical-align: top;
+      }
+
+      .summary {
+        padding: 16px;
+        margin-top: 20px;
+        background: #173f5f;
+        color: white;
+      }
+
+      dt {
+        margin-top: 12px;
+        font-weight: bold;
+        color: #f6c85f;
+      }
+
+      dd {
+        margin-left: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>CSS Box Model and Display</h1>
+    <p class="intro">
+      Every HTML element is treated as a box. The box model explains how an
+      element's content, padding, border, and margin use space. The
+      <code>display</code> property controls how that box participates in the
+      page layout.
+    </p>
+
+    <section class="lesson-section">
+      <h2>1. The box model</h2>
+      <p>From the inside out, an element is made of four parts:</p>
+      <div class="parts">
+        <div class="parts-content">
+          <strong>Content</strong>
+          <br />
+          Padding surrounds the content. The yellow border surrounds the
+          padding. Margin is the empty space outside the border.
+        </div>
+      </div>
+      <dl>
+        <dt>Content</dt>
+        <dd>The text, image, or child elements inside the box.</dd>
+        <dt>Padding</dt>
+        <dd>Space between the content and the border.</dd>
+        <dt>Border</dt>
+        <dd>A visible line around the padding and content.</dd>
+        <dt>Margin</dt>
+        <dd>
+          Space outside the border that separates this element from others.
+        </dd>
+      </dl>
+    </section>
+
+    <section class="lesson-section">
+      <h2>2. Content-box and border-box</h2>
+      <p>
+        Both examples below have <code>width: 220px</code>, padding, and a
+        border. The sizing rule changes what that width includes.
+      </p>
+      <div class="box-demo">
+        <div class="box content-box">
+          <strong>content-box</strong>
+          The 220px width is only the content width. Padding and border are
+          added outside it, so the visible box becomes wider.
+        </div>
+        <div class="box border-box">
+          <strong>border-box</strong>
+          The 220px width includes the content, padding, and border, so the
+          visible box stays 220px wide.
+        </div>
+      </div>
+      <p>
+        The usual practical choice is <code>* { box-sizing: border-box; }</code>
+        because declared widths are easier to predict.
+      </p>
+    </section>
+
+    <section class="lesson-section">
+      <h2>3. Block, inline, and inline-block elements</h2>
+      <p>
+        These examples use <code>span</code> elements so the effect of each
+        display value is easy to compare.
+      </p>
+      <div class="display-demo">
+        <strong class="block-example">display: block</strong>
+        A block element starts on a new line and normally stretches across the
+        available width. It accepts width, height, margin, and padding.
+
+        <span class="inline-example">display: inline</span>
+        An inline element stays within the current line. It does not start a new
+        line, and width and height do not control it in the same way.
+
+        <span class="inline-block-example">display: inline-block</span>
+        <span class="inline-block-example">Another inline-block</span>
+        An inline-block element stays beside other inline content, but accepts
+        width, height, margin, and padding like a block.
+      </div>
+    </section>
+
+    <section class="summary">
+      <strong>Quick summary:</strong>
+      <br />
+      <code>content-box</code> adds padding and border to the declared size;
+      <code>border-box</code> includes them. Block elements take a new line,
+      inline elements share a line, and inline-block elements share a line while
+      accepting box dimensions.
+    </section>
+  </body>
+</html>
