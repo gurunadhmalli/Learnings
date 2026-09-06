@@ -13,7 +13,7 @@ import time
 
 load_dotenv()
 
-llm = init_chat_model(model="command-a-03-2025",model_provider="cohere")
+llm = init_chat_model(model_provider="cohere",model = "command-a-03-2025")
 
 
 
