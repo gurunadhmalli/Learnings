@@ -1,0 +1,67 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  font-family: "Playfair Display", serif;
+}
+body {
+  background: linear-gradient(135deg, #8a2be2, #4169e1);
+}
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.content {
+  text-align: center;
+  background-color: rgb(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 400px;
+}
+
+.logo {
+  width: 200px;
+  /* height: 100px; */
+  object-fit: contain;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+input[type="email"] {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+button {
+  padding: 0.5rem;
+  background-color: #8a2be2;
+  color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+button:hover {
+  background-color: #d6adad;
+}
