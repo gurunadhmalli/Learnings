@@ -36,23 +36,29 @@ Animal.prototype.sound = function () {
 };
 
 let dog = new Animal("dog");
-console.log(dog.sound());
+// console.log(dog.sound());
 
 //exception
 
-function Drink(type) {
-  if (!new.target) {
-    throw new Error("we need have the new if we want to call the drink");
-  }
-  this.type = type;
+// function Drink(type) {
+//   if (!new.target) {
+//     throw new Error("we need have the new if we want to call the drink");
+//   }
+//   this.type = type;
+// }
+
+// let campa = new Drink("campa");
+// let sprite = Drink("sprite");
+
+//how to create the constructor function
+
+function Employee(name, age, salary) {
+  this.name = name;
+  this.age = age;
+  this.salary = salary;
 }
 
-let campa = new Drink("campa");
-let sprite = Drink("sprite");
-
-//things we need learn
-//this
-//new
-//construction
-//prototype vs oop
-// what type of programming that js is
+const emp1 = new Employee("gurunadh", 25, 3000);
+const emp2 = new Employee("srinu", 25, 25000);
+console.log(emp1.name);
+console.log(emp2.salary);

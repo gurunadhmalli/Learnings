@@ -1,0 +1,18 @@
+GITHUB  : https://github.com/d-hackmt/Langsmith-Tracing
+
+LANGSMITH : https://docs.langchain.com/langsmith/home
+
+GROQ : https://console.groq.com/home
+
+GEMINI : https://aistudio.google.com/api-keys
+
+SERPER :  https://serper.dev/dashboard
+
+
+
+
+
+
+CHECK MY YOUTUBE : https://www.youtube.com/@dhackmt
+
+LETS CONNECT ON LINKDIN : https://www.linkedin.com/in/dhackmt/

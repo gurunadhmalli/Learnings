@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)https://app.eraser.io/workspace/NPtpEKh3wiiQQUxUgn1k -->
+<html lang="en" dir="ltr" style=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>Java Script Event Loop — Eraser</title><meta name="robots" content="index,follow"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@EraserLabs"><meta property="og:type" content="website"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="description" content="Created with Eraser"><meta property="og:title" content="Untitled File"><meta property="og:description" content="Created with Eraser"><meta property="og:image" content="https://app.eraser.io/_next/data/D7umDKa0U3uvwj7IuRWkM/workspace/NPtpEKh3wiiQQUxUgn1k.json/preview?openAiSidebar=true&amp;workspaceId=NPtpEKh3wiiQQUxUgn1k"><meta property="og:image:alt" content="Untitled File"><meta name="next-head-count" content="14"><script type="text/javascript" async="" src="./Java Script Event Loop — Eraser_files/fqp3uy63"></script><script>
+(function () {
+  var darkModeClass = "darkMode";
+  var sessionCookie = "__session";
+  var themeCookieKey = "eraserThemeSetting";
+
+  function getQueryTheme() {
+    try {
+      var theme = new URLSearchParams(window.location.search).get('theme');
+      if (theme === 'dark' || theme === 'light' || theme === 'system') {
+        return theme;
+      }
+    } catch (_error) {}
+    return null;
+  }
+
+  function getSessionTheme() {
+    try {
+      var cookies = document.cookie ? document.cookie.split('; ') : [];
+      for (var index = 0; index < cookies.length; index += 1) {
+        var cookie = cookies[index];
+        var separatorIndex = cookie.indexOf('=');
+        var name = separatorIndex === -1 ? cookie : cookie.slice(0, separatorIndex);
+        if (name !== sessionCookie) {
+          continue;
+        }
+
+        var value = separatorIndex === -1 ? '' : cookie.slice(separatorIndex + 1);
+        var sessionData = JSON.parse(decodeURIComponent(value));
+        var theme = sessionData && sessionData[themeCookieKey];
+        if (theme === 'dark' || theme === 'light' || theme === 'system') {
+          return theme;
+        }
+      }
+    } catch (_error) {}
+    return null;
+  }
+
+  function getSystemTheme() {
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
+  }
+
+  var queryTheme = getQueryTheme();
+  var sessionTheme = getSessionTheme();
+  var themeSetting = queryTheme || sessionTheme || 'system';
+  var theme = themeSetting;
+  var themeSource = queryTheme ? 'query' : sessionTheme ? 'session' : 'default';
+
+  if (theme === 'system') {
+    theme = getSystemTheme();
+    themeSource += ':system';
+  }
+
+  window.__eraserInitialTheme = {
+    theme: theme,
+    source: themeSource,
+    setting: themeSetting || undefined,
+  };
+  document.documentElement.classList.toggle(darkModeClass, theme === 'dark');
+})();
+</script><link rel="manifest" href="https://app.eraser.io/manifest.webmanifest"><link rel="icon" href="https://app.eraser.io/favicon.ico"><link rel="icon" href="https://app.eraser.io/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="https://app.eraser.io/apple-touch-icon.png"><style>
+        body {
+          margin: 0;
+          display: block !important;
+        }
+        .eraserSplash {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          z-index: 9999;
+          position: fixed;
+          align-items: center;
+          pointer-events: none;
+          flex-direction: column;
+          justify-content: center;
+          background: linear-gradient(0deg, #f1f1f1 0%, #ffffff 100%);
+        }
+        .eraserSplash.hidden {
+          opacity: 0;
+          transition: opacity 100ms ease-out;
+        }
+        .splashCenterer {
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          justify-content: center;
+        }
+        .splashLoadingContainer {
+          left: 50px;
+          bottom: 40px;
+          display: flex;
+          color: #878787;
+          font-size: 14px;
+          line-height: 20px;
+          position: absolute;
+          align-items: center;
+          justify-content: center;
+          font-family: Inter var, -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Helvetica, Ubuntu, Roboto, Noto, Arial, sans-serif;
+        }
+        .splashLoadingSpinner {
+          width: 20px;
+          height: 20px;
+          border-width: 3px;
+          border-radius: 50%;
+          margin-right: 10px;
+          border-style: solid;
+          box-sizing: border-box;
+          animation: spinner 1s linear infinite;
+          border-color: #e3e3e3 #4b4b4b #e3e3e3 #e3e3e3;
+        }
+        @keyframes spinner {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+        :root.darkMode .eraserSplash {
+          color: #fff;
+          background: linear-gradient(0deg, #242424 0%, #171717 100%);
+        }
+        :root.darkMode .eraserSplash .splashLoadingContainer {
+          color: #d6d6d6;
+        }
+        :root.darkMode .eraserSplash .splashLoadingSpinner {
+          border-color: #666666 #e8e8e8 #666666 #666666;
+        }
+      </style><link rel="preload" as="style" type="text/css" href="./Java Script Event Loop — Eraser_files/nimbus-sans.css"><link rel="preload" as="font" type="font/woff2" href="https://app.eraser.io/_next/static/fonts/NimbusSanL-Reg.woff2" crossorigin="anonymous"><link rel="preload" as="font" type="font/woff2" href="https://app.eraser.io/_next/static/fonts/NimbusSanLFerrule-Reg.woff2" crossorigin="anonymous"><link rel="stylesheet" type="text/css" href="./Java Script Event Loop — Eraser_files/nimbus-sans.css"><link rel="preload" as="style" type="text/css" href="./Java Script Event Loop — Eraser_files/virgil-v2.css"><link rel="preload" as="font" type="font/woff2" href="https://app.eraser.io/_next/static/fonts/virgil-v2.woff2" crossorigin="anonymous"><link rel="stylesheet" type="text/css" href="./Java Script Event Loop — Eraser_files/virgil-v2.css"><link rel="preload" as="style" type="text/css" href="./Java Script Event Loop — Eraser_files/jetbrains-font.css"><link rel="preload" as="font" type="font/woff2" href="https://app.eraser.io/_next/static/fonts/JetBrainsMono-Regular.woff2" crossorigin="anonymous"><link rel="stylesheet" type="text/css" href="./Java Script Event Loop — Eraser_files/jetbrains-font.css"><link rel="preload" as="style" type="text/css" href="./Java Script Event Loop — Eraser_files/national-2-font.css"><link rel="preload" as="font" type="font/woff2" href="https://app.eraser.io/_next/static/fonts/national-2-condensed-bold.woff2" crossorigin="anonymous"><link rel="stylesheet" type="text/css" href="./Java Script Event Loop — Eraser_files/national-2-font.css"><link rel="preload" as="style" type="text/css" href="./Java Script Event Loop — Eraser_files/inter.css"><link rel="preload" as="font" type="font/woff2" href="https://app.eraser.io/_next/static/fonts/Inter.var.woff2" crossorigin="anonymous"><link rel="stylesheet" type="text/css" href="./Java Script Event Loop — Eraser_files/inter.css"><!--<base href="/">--><base href="."><link rel="preload" href="./Java Script Event Loop — Eraser_files/501e6d6d781a5031.css" as="style"><link rel="stylesheet" href="./Java Script Event Loop — Eraser_files/501e6d6d781a5031.css" data-n-g=""><noscript data-n-css=""></noscript><style data-n-href="/_next/static/css/9d336443a8f0e5b4.css">.AuthBanner_header__hgvMD{position:relative;z-index:10;background-color:var(--grey-0)}.AuthBanner_wrapper__Cznaq{display:flex;align-items:center;height:40px;padding:0 16px;background:var(--grey-500);font-size:14px}.AuthBanner_wrapper__Cznaq>*{margin:8px}.AuthBanner_text__SBtet{margin-left:auto}.AuthBanner_signIn__ugcMl{height:26px;margin-left:8px}.AuthBanner_close__FmqGy{width:11px;margin-left:auto;cursor:pointer}
+</style><style data-n-href="/_next/static/css/013982fe5c667d00.css" media="x">.DashboardTableSkeleton_gutter__ut_gn{opacity:0}.DashboardTableSkeleton_name__C1_ik{flex:2.5 1}.DashboardTableSkeleton_folder__T7O2u{flex:1.5 1}.DashboardTableSkeleton_createdAt__uF5YO{flex:.7 1}.DashboardTableSkeleton_updatedAt__gX1pz{flex:.7 1}.DashboardTableSkeleton_comments__TvMDe{flex:.7 1}.DashboardTableSkeleton_views__7wDz0{flex:.5 1}.DashboardTableSkeleton_author__fmcB8{flex:.5 1}.DashboardTableSkeleton_emptySpace__fFX_s{flex:.5 1}.DashboardTableSkeleton_views__7wDz0 span,.DashboardTableSkeleton_author__fmcB8 span,.DashboardTableSkeleton_comments__TvMDe span{display:block;margin:auto}
+.TableAvatars_tableAvatars__NyU0p{display:flex;align-items:center;justify-content:center}.TableAvatars_tableAvatars__NyU0p .TableAvatars_tableAvatar__rp18T{border-radius:50%}.TableAvatars_tableAvatars__NyU0p .TableAvatars_tableAvatar__rp18T:not(:first-of-type){margin-left:-6px}.TableAvatars_tableAvatars__NyU0p .TableAvatars_tableAvatar__rp18T .TableAvatars_tableAvatarIcon__baytx{display:flex;width:19px;height:19px}.TableAvatars_tableAvatars__NyU0p .TableAvatars_tableAvatar__rp18T .TableAvatars_tableAvatarIcon__baytx>span{font-size:9px}
+.ShareWorkspace_container__Go1SK{color:var(--grey-1600)}.ShareWorkspace_container__Go1SK hr{width:calc(100% + 50px);height:0;margin-bottom:25px;transform:translateX(-25px);border:0;border-top:1px solid var(--grey-300)}.ShareWorkspace_header__iFLdu{align-items:baseline;justify-content:space-between;margin-bottom:25px}.ShareWorkspace_qrCodeButton__KHBZR{width:30px;padding:0}.ShareWorkspace_userList___ZJo6{align-items:stretch;width:100%;max-height:200px;margin-top:20px;overflow:auto}.ShareWorkspace_userList___ZJo6 .ShareWorkspace_userRow__4i_AD{justify-content:space-between;width:100%}.ShareWorkspace_info__ZzZjS{font-size:12px}.ShareWorkspace_wideTooltip__TF__l{max-width:250px}
+.WorkspaceFeatures_container__MUkJe{display:flex;align-items:center;justify-content:flex-end;width:100%}.WorkspaceFeatures_container__MUkJe>*{margin-left:6px}.WorkspaceFeatures_collaboratorsFeature__0zu4y{margin-right:5px}.WorkspaceFeatures_shareFeature__P29vA{margin-left:11px}@media only screen and (max-width: 576px){.WorkspaceFeatures_container__MUkJe{display:block}.WorkspaceFeatures_shareFeature__P29vA{margin-left:0;padding:0 !important;font-size:16px;font-weight:500}}.WorkspaceFeatures_commentsToggle__OvtDD{position:relative;width:34px;height:30px;border:1px solid rgba(0,0,0,0);border-radius:4px;color:var(--grey-1700)}.WorkspaceFeatures_commentsToggle__OvtDD .WorkspaceFeatures_unreadIndicator__bTqnB{position:absolute;top:2px;right:3px;height:14px;padding:0 4px;border-radius:4px;background-color:var(--red);color:var(--grey-0-constant);font-family:"JetBrainsMono",SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:9px;font-weight:700;letter-spacing:-0.5px;line-height:14px}.WorkspaceFeatures_commentsToggle__OvtDD .WorkspaceFeatures_icon__Nl3XG{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%)}.WorkspaceFeatures_commentsToggle__OvtDD .WorkspaceFeatures_icon__Nl3XG path{transition:fill 200ms ease}.WorkspaceFeatures_commentsToggle__OvtDD .WorkspaceFeatures_icon__Nl3XG path:first-of-type{fill:none}.WorkspaceFeatures_commentsToggle__OvtDD .WorkspaceFeatures_icon__Nl3XG path:last-of-type{fill:var(--grey-1700)}.WorkspaceFeatures_commentsToggle__OvtDD:hover,.WorkspaceFeatures_commentsToggle__OvtDD.WorkspaceFeatures_isActive__6ibRj{border-color:var(--grey-400);background:var(--grey-200)}.WorkspaceFeatures_commentsToggle__OvtDD:hover .WorkspaceFeatures_icon__Nl3XG path:first-of-type{fill:var(--grey-700)}.WorkspaceFeatures_commentsToggle__OvtDD.WorkspaceFeatures_isActive__6ibRj .WorkspaceFeatures_icon__Nl3XG path:first-of-type{fill:var(--grey-1700)}.WorkspaceFeatures_commentsToggle__OvtDD.WorkspaceFeatures_disabled__mh6oK{border-color:rgba(0,0,0,0);background:rgba(0,0,0,0);cursor:default;pointer-events:auto}.WorkspaceFeatures_commentsToggle__OvtDD.WorkspaceFeatures_disabled__mh6oK .WorkspaceFeatures_icon__Nl3XG path:first-of-type{fill:var(--grey-0)}.WorkspaceFeatures_commentsToggle__OvtDD.WorkspaceFeatures_disabled__mh6oK .WorkspaceFeatures_icon__Nl3XG path:last-of-type{fill:var(--grey-700)}.WorkspaceFeatures_metadataToggle__KeZkT{width:34px;height:30px;border:1px solid rgba(0,0,0,0);border-radius:4px}.WorkspaceFeatures_metadataToggle__KeZkT:hover{border-color:var(--grey-500);background:var(--grey-300)}.WorkspaceFeatures_metadataToggle__KeZkT:active,.WorkspaceFeatures_metadataToggle__KeZkT.WorkspaceFeatures_active__sgMyS{border-color:var(--grey-800);background:var(--grey-400)}.WorkspaceFeatures_metadataToggle__KeZkT .WorkspaceFeatures_aiChatIcon__WMQSU{bottom:unset;margin:0}.WorkspaceFeatures_metadataToggle__KeZkT .WorkspaceFeatures_aiChatIcon__WMQSU path{stroke:var(--grey-1700)}.WorkspaceFeatures_metadataToggle__KeZkT .WorkspaceFeatures_metadataIcon__ofwNh{bottom:unset;width:20px;height:20px;margin:0}.WorkspaceFeatures_metadataToggle__KeZkT .WorkspaceFeatures_metadataIcon__ofwNh path{stroke:var(--grey-1700)}.WorkspaceFeatures_metadataToggle__KeZkT .WorkspaceFeatures_metadataIcon__ofwNh path:last-of-type{stroke:none;fill:var(--grey-1700)}.WorkspaceFeatures_workspaceFeaturePopup__nauU_{max-height:calc(100vh - 100px);margin-top:5px;padding:25px;overflow:auto;border:1px solid var(--grey-400);border-radius:8px}.WorkspaceFeatures_aiChatButton__QMfoW{width:105px;box-shadow:none}.WorkspaceFeatures_aiChatButton__QMfoW .WorkspaceFeatures_aiChatIcon__WMQSU{bottom:unset}.WorkspaceFeatures_aiChatButton__QMfoW .WorkspaceFeatures_aiChatIcon__WMQSU path{stroke:var(--grey-0-constant)}.WorkspaceFeatures_aiChatButton__QMfoW.WorkspaceFeatures_active__sgMyS{padding:0 6px;background:var(--grey-200);color:var(--grey-1700)}.WorkspaceFeatures_aiChatButton__QMfoW.WorkspaceFeatures_active__sgMyS span[class*=shortcut]{margin-right:0}.WorkspaceFeatures_aiChatButton__QMfoW.WorkspaceFeatures_active__sgMyS:hover{background:var(--grey-400)}.WorkspaceFeatures_aiChatButton__QMfoW.WorkspaceFeatures_active__sgMyS .WorkspaceFeatures_aiChatIcon__WMQSU path{stroke:var(--grey-1700)}.WorkspaceFeatures_shareWorkspace__b_EDw{display:inline-flex;margin-left:11px}.WorkspaceFeatures_shareWorkspace__b_EDw .WorkspaceFeatures_tooltipContainer__5r72O{line-height:0}.WorkspaceFeatures_shareWorkspace__b_EDw .WorkspaceFeatures_button__DN27P{border-radius:4px 0 0 4px;box-shadow:none}.WorkspaceFeatures_shareWorkspace__b_EDw .WorkspaceFeatures_button__DN27P:not(.WorkspaceFeatures_quickShare__pkF7q){border-right-width:0}.WorkspaceFeatures_shareWorkspace__b_EDw .WorkspaceFeatures_button__DN27P.WorkspaceFeatures_quickShare__pkF7q{position:relative;width:28px;border-left-width:0;border-radius:0 4px 4px 0}.WorkspaceFeatures_shareWorkspace__b_EDw .WorkspaceFeatures_button__DN27P.WorkspaceFeatures_quickShare__pkF7q:focus{background:var(--grey-300)}.WorkspaceFeatures_shareWorkspace__b_EDw .WorkspaceFeatures_button__DN27P.WorkspaceFeatures_quickShare__pkF7q:hover{background-color:var(--grey-300)}.WorkspaceFeatures_shareWorkspace__b_EDw .WorkspaceFeatures_button__DN27P.WorkspaceFeatures_quickShare__pkF7q svg{position:absolute;top:50%;left:50%;width:12px;height:12px;transform:translate(-50%, -50%);transition:opacity .01s;transition-delay:.6s}.WorkspaceFeatures_shareWorkspace__b_EDw .WorkspaceFeatures_button__DN27P.WorkspaceFeatures_quickShare__pkF7q svg path{stroke:var(--grey-1700)}.WorkspaceFeatures_shareWorkspace__b_EDw .WorkspaceFeatures_button__DN27P.WorkspaceFeatures_quickShare__pkF7q svg:last-of-type{width:14px;height:14px;opacity:0}.WorkspaceFeatures_shareWorkspace__b_EDw .WorkspaceFeatures_button__DN27P.WorkspaceFeatures_quickShare__pkF7q:active svg{transition-delay:unset}.WorkspaceFeatures_shareWorkspace__b_EDw .WorkspaceFeatures_button__DN27P.WorkspaceFeatures_quickShare__pkF7q:active svg:first-of-type{opacity:0}.WorkspaceFeatures_shareWorkspace__b_EDw .WorkspaceFeatures_button__DN27P.WorkspaceFeatures_quickShare__pkF7q:active svg:last-of-type{opacity:1}
+.FileActions_deleteOption__6NZHa{color:var(--red)}
+.GettingStartedFileCards_gettingStartedFileCards__j7AQk{display:flex;justify-content:flex-start;gap:20px;margin:10px 50px 30px 70px}.GettingStartedFileCards_gettingStartedFileCards__j7AQk .GettingStartedFileCards_card__cWTvP{flex:1 1;max-width:225px;height:120px;border:1px solid var(--grey-500);border-radius:var(--radius-medium);background:var(--grey-200);color:var(--grey-900);text-align:center}.GettingStartedFileCards_gettingStartedFileCards__j7AQk .GettingStartedFileCards_card__cWTvP svg{width:35px;height:35px;stroke-width:1}.GettingStartedFileCards_gettingStartedFileCards__j7AQk .GettingStartedFileCards_card__cWTvP .GettingStartedFileCards_sparklesIcon__k_ZKA path{stroke-width:.45 !important}.GettingStartedFileCards_gettingStartedFileCards__j7AQk .GettingStartedFileCards_card__cWTvP .GettingStartedFileCards_title__TrtnO{display:block;margin-top:20px;color:var(--grey-1000)}.GettingStartedFileCards_gettingStartedFileCards__j7AQk .GettingStartedFileCards_card__cWTvP:hover{border-color:var(--grey-800);background:var(--grey-300);color:var(--grey-1000)}.GettingStartedFileCards_gettingStartedFileCards__j7AQk .GettingStartedFileCards_card__cWTvP:hover .GettingStartedFileCards_title__TrtnO{color:var(--grey-1700)}
+</style><script defer="" nomodule="" src="./Java Script Event Loop — Eraser_files/polyfills-c67a75d1b6f99dc8.js.download"></script><script src="./Java Script Event Loop — Eraser_files/webpack-af66e042d7af34fa.js.download" defer=""></script><script src="./Java Script Event Loop — Eraser_files/framework-2a605a070fe1833b.js.download" defer=""></script><script src="./Java Script Event Loop — Eraser_files/main-dcffd6232a38b6b1.js.download" defer=""></script><script src="./Java Script Event Loop — Eraser_files/app-vendors-5c84d9fb56a55289.js.download" defer=""></script><script src="./Java Script Event Loop — Eraser_files/_app-8330d0282f49c417.js.download" defer=""></script><script src="./Java Script Event Loop — Eraser_files/sign-in-a69340f1fbc71acc.js.download" defer=""></script><script src="./Java Script Event Loop — Eraser_files/_buildManifest.js.download" defer=""></script><script src="./Java Script Event Loop — Eraser_files/_ssgManifest.js.download" defer=""></script><style id="_goober"> @keyframes go2264125279{from{transform:scale(0) rotate(45deg);opacity:0;}to{transform:scale(1) rotate(45deg);opacity:1;}}@keyframes go3020080000{from{transform:scale(0);opacity:0;}to{transform:scale(1);opacity:1;}}@keyframes go463499852{from{transform:scale(0) rotate(90deg);opacity:0;}to{transform:scale(1) rotate(90deg);opacity:1;}}@keyframes go1268368563{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}@keyframes go1310225428{from{transform:scale(0) rotate(45deg);opacity:0;}to{transform:scale(1) rotate(45deg);opacity:1;}}@keyframes go651618207{0%{height:0;width:0;opacity:0;}40%{height:0;width:6px;opacity:1;}100%{opacity:1;height:10px;}}@keyframes go901347462{from{transform:scale(0.6);opacity:0.4;}to{transform:scale(1);opacity:1;}}.go4109123758{z-index:9999;}.go4109123758 > *{pointer-events:auto;}.go2072408551{display:flex;align-items:center;background:#fff;color:#363636;line-height:1.3;will-change:transform;box-shadow:0 3px 10px rgba(0, 0, 0, 0.1), 0 3px 3px rgba(0, 0, 0, 0.05);max-width:350px;pointer-events:auto;padding:8px 10px;border-radius:8px;}.go685806154{position:relative;display:flex;justify-content:center;align-items:center;min-width:20px;min-height:20px;}.go1858758034{width:12px;height:12px;box-sizing:border-box;border:2px solid;border-radius:100%;border-color:#e0e0e0;border-right-color:#616161;animation:go1268368563 1s linear infinite;}.go3958317564{display:flex;justify-content:center;margin:4px 10px;color:inherit;flex:1 1 auto;white-space:pre-line;}@keyframes go2645569136{0%{transform:translate3d(0,200%,0) scale(.6);opacity:.5;}100%{transform:translate3d(0,0,0) scale(1);opacity:1;}}.go1579819456{position:absolute;}.go2344853693{width:20px;opacity:0;height:20px;border-radius:10px;background:#61d345;position:relative;transform:rotate(45deg);animation:go1310225428 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;animation-delay:100ms;}.go2344853693:after{content:'';box-sizing:border-box;animation:go651618207 0.2s ease-out forwards;opacity:0;animation-delay:200ms;position:absolute;border-right:2px solid;border-bottom:2px solid;border-color:#fff;bottom:6px;left:6px;height:10px;width:6px;}@keyframes go1846062317{0%{transform:translate3d(0,0,-1px) scale(1);opacity:1;}100%{transform:translate3d(0,150%,-1px) scale(.6);opacity:0;}}</style><link as="script" rel="prefetch" href="./Java Script Event Loop — Eraser_files/survey-1830aa5cad8703dd.js.download"><link as="script" rel="prefetch" href="./Java Script Event Loop — Eraser_files/new-f3a1d7bf860cb833.js.download"><link as="script" rel="prefetch" href="./Java Script Event Loop — Eraser_files/join-a4dcb36be3c06995.js.download"><link as="script" rel="prefetch" href="./Java Script Event Loop — Eraser_files/create-37397610c388c8a1.js.download"><link as="script" rel="prefetch" href="./Java Script Event Loop — Eraser_files/1498-29eea25636575458.js.download"><link as="script" rel="prefetch" href="./Java Script Event Loop — Eraser_files/2702-fe92ea9d0f59b881.js.download"><link as="script" rel="prefetch" href="./Java Script Event Loop — Eraser_files/42-e730f5d6c840cfa9.js.download"><link as="script" rel="prefetch" href="./Java Script Event Loop — Eraser_files/8933-562563391353560c.js.download"><link as="script" rel="prefetch" href="./Java Script Event Loop — Eraser_files/all-8a661cd4aa48f759.js.download"><style data-emotion="css"></style><link as="script" rel="prefetch" href="./Java Script Event Loop — Eraser_files/6599-1accf181d5d00f3e.js.download"><link as="script" rel="prefetch" href="./Java Script Event Loop — Eraser_files/[workspaceId]-0f009e7334334c5b.js.download"><link rel="stylesheet" type="text/css" href="./Java Script Event Loop — Eraser_files/6e29bc8308ca672b.css"><link rel="stylesheet" type="text/css" href="./Java Script Event Loop — Eraser_files/0e53238b78b04d37.css"><link rel="stylesheet" type="text/css" href="./Java Script Event Loop — Eraser_files/c4a1ba06c2def79e.css"><link rel="stylesheet" type="text/css" href="./Java Script Event Loop — Eraser_files/70acdcb56494283e.css"><link rel="stylesheet" type="text/css" href="./Java Script Event Loop — Eraser_files/1101f8cebb933e5a.css"><link rel="stylesheet" type="text/css" href="./Java Script Event Loop — Eraser_files/9c6bb7a9b0161055.css"><link rel="stylesheet" type="text/css" href="./Java Script Event Loop — Eraser_files/8ef7ee905be7cc70.css"><link rel="stylesheet" type="text/css" href="./Java Script Event Loop — Eraser_files/e440a438d0d50bc1.css"><style data-slate-default-styles="true">:where([data-slate-editor]) {position: relative;outline: none;white-space: pre-wrap;word-wrap: break-word;}</style><style>:where([data-slate-editor-id="0"]) { min-height: 20px; }</style></head><body><div id="popper-root"></div><div id="__next" data-reactroot=""><div class="workspace"><div data-is-ready="true" class="WorkspaceLayout_workspaceLayout__hqFLr bg-g4"><div id="notice-container"></div><div class="FreeTierTeamWorkspaceHeader_header__grm4H"><div class="rowCentered FreeTierTeamWorkspaceHeader_header__content__eqyDu"><p>You are on the Free plan. Upgrade for additional AI credits, high res exports, and unlimited files.</p><button class="Button_button__fNS_E Button_regular__eMnxK Button_small__rvXZZ marginLeftMedium">Upgrade</button></div><div class="FreeTierTeamWorkspaceHeader_header__close__IZm_m"><span><button type="button" class="FreeTierTeamWorkspaceHeader_closeBtn__YxYfO"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12"><path fill="currentColor" d="M11.25.758a.83.83 0 0 0-1.175 0L6 4.825 1.925.75A.83.83 0 1 0 .75 1.925L4.825 6 .75 10.075a.83.83 0 1 0 1.175 1.175L6 7.175l4.075 4.075a.83.83 0 1 0 1.175-1.175L7.175 6l4.075-4.075a.835.835 0 0 0 0-1.167"></path></svg></button></span></div></div><div class="WorkspaceLayout_bezelMode__czlJf"><div tabindex="0" class="LayoutHeader_header__dSQpF" style="height: 47px;"><div class="LayoutHeader_grid__zfHKD"><div class="LayoutHeader_title__jqLJC"><a class="TitleLink_breadcrumb__N9csJ" data-testid="dashboard-link" href="https://app.eraser.io/all"><span><span><svg class="TitleLogo_logo__7cnAS" viewBox="0 0 1699 660"><path fill="#EC2C40" d="M804.7,660.3H50c-38.8,0-62.8-55-42.7-98.2L253,31.4C262,11.9,278.2,0,295.7,0h509V660.3z"></path><path fill="#00A9E5" d="M891.3,0L1646,0c38.8,0,62.8,55,42.7,98.2L1443,628.9c-9,19.5-25.2,31.4-42.7,31.4h-509V0z"></path></svg></span></span></a><div class="WorkspaceTitle_titleEditorContainer__a5M35"><div class="WorkspaceTitle_title__t8_4T" contenteditable="true" data-placeholder="Untitled File" data-testid="header-title-editor">Java Script Event Loop</div></div><span></span><div class="LayoutHeader_menu__iloQu"><span role="button" tabindex="0" class="Popup_toggler__V5BaU Dropdown_threeDotsDropdown__y7str Dropdown_popupToggle__JbX6o"><span><span class="Dropdown_toggle__waP_7 Dropdown_threeDotsDropdownToggle__KxgPz" data-is-dropdown-active="false"><span class="Dropdown_content__0oQUo"><span class="Dropdown_title__C64eP"><span data-testid="workspace-three-dot-menu" class="Dots_dots__104zg"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="4" viewBox="0 0 14 4" class=""><path fill="currentColor" d="M2 .333C1.083.333.333 1.083.333 2S1.083 3.667 2 3.667 3.667 2.917 3.667 2 2.917.333 2 .333m10 0c-.917 0-1.667.75-1.667 1.667s.75 1.667 1.667 1.667 1.667-.75 1.667-1.667S12.917.333 12 .333m-5 0c-.917 0-1.667.75-1.667 1.667S6.083 3.667 7 3.667 8.667 2.917 8.667 2 7.917.333 7 .333"></path></svg></span></span></span></span></span></span></div></div><div class="LayoutHeader_switcher__ThNID"><div data-hint-target="workspace-layout-switcher" class="LayoutSwitcher_panel__RLnpQ"><div class="Tabs_tabs__Y8thJ" style="grid-template-columns: repeat(3, minmax(0px, 1fr));"><span class="Button_tooltipWrapper__QMAeG Tabs_buttonWrapper__ptI9S"><button data-testid="layout-switcher-note" class="Button_button__fNS_E Button_regular__eMnxK Button_small__rvXZZ Tabs_button__hEYaH">Document</button></span><span class="Button_tooltipWrapper__QMAeG Tabs_buttonWrapper__ptI9S"><button data-testid="layout-switcher-both" class="Button_button__fNS_E Button_regular__eMnxK Button_small__rvXZZ Tabs_button__hEYaH">Both</button></span><span class="Button_tooltipWrapper__QMAeG Tabs_buttonWrapper__ptI9S"><button data-testid="layout-switcher-canvas" class="Button_button__fNS_E Button_regular__eMnxK Button_small__rvXZZ Tabs_button__hEYaH Tabs_selected__Mi0wV">Canvas</button></span></div></div></div><div class="LayoutHeader_features___bmdC"><div class="WorkspaceFeatures_container__MUkJe"><button data-testid="command-k-button" class="Button_button__fNS_E Button_outline__uZAW4 Button_small__rvXZZ"><span class="ShortcutKeys_shortcut__YUJIb"><kbd class="ShortcutKeys_shortcutKey__DCXaM ShortcutKeys_text__56IdZ">Ctrl</kbd><kbd class="ShortcutKeys_shortcutKey__DCXaM ShortcutKeys_text__56IdZ">K</kbd></span></button><div class="WorkspaceFeatures_shareWorkspace__b_EDw" data-hint-target="share-workspace"><span role="button" tabindex="0" class="Popup_toggler__V5BaU"><span class="Button_tooltipWrapper__QMAeG"><button data-testid="workspace-share-button" class="Button_button__fNS_E Button_transparent__FI2_6 Button_small__rvXZZ WorkspaceFeatures_button__DN27P">Share</button></span></span><span class="WorkspaceFeatures_tooltipContainer__5r72O"><button class="Button_button__fNS_E Button_transparent__FI2_6 Button_small__rvXZZ WorkspaceFeatures_button__DN27P WorkspaceFeatures_quickShare__pkF7q"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" class=""><path fill="none" stroke="currentColor" d="M4.5 6.5 1.328 9.672a2.828 2.828 0 1 0 4 4L8.5 10.5m2-2 3.172-3.172a2.829 2.829 0 0 0-4-4L6.5 4.5m-2 6 6-6"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 14 13" class=""><path fill="none" stroke="currentColor" d="M4.6 5.7 2.063 8.237a2.263 2.263 0 0 0 3.2 3.2L7.8 8.9m1.6-1.6 2.537-2.537a2.263 2.263 0 0 0-3.2-3.2L6.2 4.1M4.6 8.9l4.8-4.8m-6 0H1M4.6.5v2.4m4.8 7.2v2.4m1.2-3.6H13"></path></svg></button></span></div><span><button class="Button_button__fNS_E Button_regular__eMnxK Button_small__rvXZZ WorkspaceFeatures_aiChatButton__QMfoW"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 12 12" class="WorkspaceFeatures_aiChatIcon__WMQSU Button_leftIcon__JKaKw"><path stroke="currentColor" stroke-width="0.7" d="M6.3 5.1c-.492.492-2.279.707-3.312.83-.118.014-.122.153-.005.173.912.155 2.285.365 3.017 1.097.756.756 1.039 2.385 1.288 3.598.024.12.206.111.227-.01.222-1.285.787-3.14 1.394-3.747.647-.647 2.064-.725 3.014-.956.1-.024.1-.146-.001-.166-.957-.186-2.414.02-3.222-.52-.766-.51-1-2.8-1.18-4.145-.016-.12-.168-.12-.187 0C7.128 2.576 6.813 4.587 6.3 5.1ZM3.167 8.819c-.158.157-.854.258-1.253.318-.056.009-.056.071 0 .08.342.056.898.156 1.185.442.302.3.362.926.44 1.416.01.06.09.057.099-.004.071-.506.224-1.171.466-1.412.25-.249.748-.344 1.085-.432.051-.014.049-.077-.004-.085-.356-.057-.862-.088-1.114-.34-.265-.262-.377-1.161-.446-1.497-.009-.042-.053-.047-.067-.006-.115.34-.214 1.343-.39 1.52ZM1.8 2.7c-.146.145-.577.3-.904.397-.058.017-.051.106.008.115.278.041.638.131.896.388.3.3.467.89.585 1.366.015.06.108.054.118-.007.08-.492.256-1.12.497-1.359.22-.218.615-.325.92-.38.059-.011.062-.095.004-.109-.3-.074-.707-.195-.924-.411-.242-.241-.377-.82-.475-1.242l-.002-.009c-.014-.057-.104-.056-.121 0-.136.448-.437 1.087-.602 1.25Z"></path></svg>Eraser AI</button></span><span class="Button_tooltipWrapper__QMAeG"><button class="Button_button__fNS_E Button_reversed__Yd8T5 Button_small__rvXZZ WorkspaceFeatures_commentsToggle__OvtDD WorkspaceFeatures_disabled__mh6oK"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 17 17" class="WorkspaceFeatures_icon__Nl3XG"><path fill="#FFF" fill-rule="evenodd" d="M4.5 12.493v2.998l4-2.998h6c.553 0 1-.447 1-1V2.5c0-.552-.447-.999-1-.999h-12c-.553 0-1 .447-1 1v8.994c0 .552.447.999 1 .999z" clip-rule="evenodd"></path><path fill="currentColor" d="M4.5 12.493h.6v-.6h-.6zm0 2.998h-.6a.6.6 0 0 0 .96.48zm4-2.998v-.6h-.2l-.16.12zm-4.6 0v2.998h1.2v-2.998zm.96 3.478 4-2.998-.72-.96-4 2.998zm3.64-2.878h6v-1.2h-6zm6 0c.884 0 1.6-.715 1.6-1.6h-1.2c0 .221-.178.4-.4.4zm1.6-1.6V2.5h-1.2v8.994zm0-8.994C16.1 1.615 15.384.9 14.5.9v1.2c.222 0 .4.178.4.4zM14.5.9h-12v1.2h12zm-12 0C1.616.9.9 1.615.9 2.5h1.2c0-.222.178-.4.4-.4zM.9 2.5v8.994h1.2V2.499zm0 8.994c0 .884.716 1.599 1.6 1.599v-1.2a.4.4 0 0 1-.4-.4zm1.6 1.599h2v-1.2h-2z"></path></svg></button></span><span role="button" tabindex="0" class="Popup_toggler__V5BaU"><span class="Button_tooltipWrapper__QMAeG"><button class="Button_button__fNS_E Button_reversed__Yd8T5 Button_small__rvXZZ WorkspaceFeatures_metadataToggle__KeZkT"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 22 22" class="WorkspaceFeatures_metadataIcon__ofwNh"><path stroke="#171717" stroke-width="1.5" d="M10.5 4.5H17a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V14"></path><path stroke="#171717" d="M15.5 8.5h-4m4 3h-4m4 3h-7"></path><path fill="#171717" d="M4.75 3.01v.75h1.5v-.75zM6.25 3v-.75h-1.5V3zm0 6.51V5.262h-1.5V9.51zm0-6.5V3h-1.5v.01zM3 6.76h2.5v-1.5H3zm0 4h5v-1.5H3z"></path></svg></button></span></span></div></div></div></div><div class="SplitLayout_container__JYwDq"><div class="SplitLayout_dragLayer__73KX4 "></div><div class="SplitLayout_pane__hm1Cg" style="flex-grow: 384; flex-shrink: 384; min-width: 384px; position: absolute; z-index: -1000; visibility: hidden;"><div class="WorkspaceLayout_panel__upb8x WorkspaceLayout_notepad__LzfoJ"><div class="Notepad_wrapper__3t9j_"><div class="Notepad_measurer__Otdpo"><div></div></div><div id="note-container" class="Notepad_container__C0YbN Notepad_customScrollbar__olo4S"><div class="Notepad_containerHintPhantom__uLHCF" data-hint-target="document-editor"></div><div class="Notepad_notepad__6sYUU"><div class="TitleEditor_titleEditorContainer__Fy9q3"><div class="TitleEditor_title__LtNNv" contenteditable="true" data-placeholder="Untitled File" id="note-title-editor" data-testid="notepad-title">Java Script Event Loop</div></div><div role="textbox" aria-multiline="true" id="note-content" spellcheck="true" class="NotepadEditor_notepad__9ORcm" data-slate-editor="true" data-slate-editor-id="0" data-slate-node="value" contenteditable="true" zindex="-1"><section id="bdPDObi-1qo6zG5EqXqPb" data-slate-node="element"><p data-slate-node="element" id="V55kPLH8sDr3u4Trot1HO"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-placeholder="true" contenteditable="false" style="position: absolute; pointer-events: none; width: 100%; max-width: 100%; display: block; opacity: 0.333; user-select: none; text-decoration: none;"><span class="EraserSlate_placeholderHint__H9_hz">Type your notes or document here — style with markdown or <button class="Button_button__fNS_E Button_reversed__Yd8T5 Button_small__rvXZZ EraserSlate_link__oLViV">shortcuts</button> <span class="EraserSlate_noWrap__kjh6R">(Ctrl/)</span></span></span><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></p></section></div><div id="left-side-menu-container" class="Slate_sideMenuContainer__AJAWz" style="left: 50.6667px; transform: translateX(-100%);"></div><div id="right-side-menu-container" class="Slate_sideMenuContainer__AJAWz" style="left: 340.667px;"></div><button class="Button_button__fNS_E Button_light__p9Dmo Button_small__rvXZZ EraserSlate_aiButton__ko9of"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" class=""><path stroke="currentColor" stroke-width="0.7" d="M6.3 5.1c-.492.492-2.279.707-3.312.83-.118.014-.122.153-.005.173.912.155 2.285.365 3.017 1.097.756.756 1.039 2.385 1.288 3.598.024.12.206.111.227-.01.222-1.285.787-3.14 1.394-3.747.647-.647 2.064-.725 3.014-.956.1-.024.1-.146-.001-.166-.957-.186-2.414.02-3.222-.52-.766-.51-1-2.8-1.18-4.145-.016-.12-.168-.12-.187 0C7.128 2.576 6.813 4.587 6.3 5.1ZM3.167 8.819c-.158.157-.854.258-1.253.318-.056.009-.056.071 0 .08.342.056.898.156 1.185.442.302.3.362.926.44 1.416.01.06.09.057.099-.004.071-.506.224-1.171.466-1.412.25-.249.748-.344 1.085-.432.051-.014.049-.077-.004-.085-.356-.057-.862-.088-1.114-.34-.265-.262-.377-1.161-.446-1.497-.009-.042-.053-.047-.067-.006-.115.34-.214 1.343-.39 1.52ZM1.8 2.7c-.146.145-.577.3-.904.397-.058.017-.051.106.008.115.278.041.638.131.896.388.3.3.467.89.585 1.366.015.06.108.054.118-.007.08-.492.256-1.12.497-1.359.22-.218.615-.325.92-.38.059-.011.062-.095.004-.109-.3-.074-.707-.195-.924-.411-.242-.241-.377-.82-.475-1.242l-.002-.009c-.014-.057-.104-.056-.121 0-.136.448-.437 1.087-.602 1.25Z"></path></svg><span>Generate document</span><span class="ShortcutKeys_shortcut__YUJIb"><kbd class="ShortcutKeys_shortcutKey__DCXaM ShortcutKeys_text__56IdZ">Ctrl</kbd><kbd class="ShortcutKeys_shortcutKey__DCXaM ShortcutKeys_text__56IdZ">J</kbd></span></button></div></div><span role="button" tabindex="0" class="Popup_toggler__V5BaU Outline_toggleButton__mpj51 Outline_lessLeft__JYiZ5 Dropdown_popupToggle__JbX6o"><span><span class="Dropdown_toggle__waP_7 Outline_toggleRoot__T_Ybn Dropdown_variant--lightGreyContrast__po3l6" data-is-dropdown-active="false"><span class="Dropdown_content__0oQUo"><span class="Dropdown_title__C64eP"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 28 28"><path d="M0 3a3 3 0 0 1 3-3h22a3 3 0 0 1 3 3v22a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3z"></path><path stroke="currentColor" stroke-linecap="round" d="M7 10.5h15m-15 8h9m-9-4h6"></path></svg></span></span></span></span></span></div><div style="position: absolute; left: 15px; bottom: 5px;"></div></div></div><div class="SplitLayout_pane__hm1Cg" style="flex-grow: 873.667; flex-shrink: 873.667; min-width: 384px; position: static; z-index: initial; visibility: visible;"><div class="WorkspaceLayout_panel__upb8x WorkspaceLayout_whiteboard__3arhJ"><div data-ready="true" data-testid="whiteboard-container" class="Whiteboard_container__QRhy9"><div id="excalidraw" class="excalidraw"><div class="LayerUI_container__e0MIU"><div class="FixedSideContainer_container__V8dPT FixedSideContainer_top__q0tV5"><div class="LayerUI_island__FTIBM LayerUI_top__tDnR1" data-canvas-toolbar="true"><section data-hint-target="universal-toolbar" aria-labelledby="shapes-title"><h2 class="Section_hidden__13gRJ" id="shapes-title">Shapes</h2><div data-island-index="0" class="LayerUI_toolIsland__tIdBl LayerUI_animation__nYiY4"><div data-hint-target="insert-menu-button-container" data-textfield-blur-exception="true" class="Island_container__zbK0U" style="--padding: 1;"><div><span><button aria-label="Insert" type="button" class="ToolButton_toolButton__h19gN ToolButton_medium__G_ysU"><span class="ToolButton_content__Mcd7f ToolButton_icon__jlZFP"><span class="LayerUI_closeIcon__AzF3a"><svg role="img" width="12" height="12" focusable="false" aria-hidden="true" viewBox="0 0 12 12" class=""><path fill="path" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" d="M6 1V6M6 11V6M6 6H11M6 6H1"></path></svg></span></span><span class="ToolButton_keyBinding__CxK09">/</span></button></span></div></div></div><div data-island-index="1" class="LayerUI_toolIsland__tIdBl LayerUI_animation__nYiY4"><div data-textfield-blur-exception="true" class="Island_container__zbK0U LayerUI_aiDiagram__3aTVm"><div class="Stack_stack__jj1_v Stack_vertical__hHFEf" style="--gap: 0.5;"><span class="shape"><button data-testid="aiDiagram" class="ToolButton_toolButton__h19gN shape ToolButton_medium__G_ysU"><span class="ToolButton_content__Mcd7f ToolButton_icon__jlZFP"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 12 12" class=""><path stroke="currentColor" stroke-width="0.7" d="M6.3 5.1c-.492.492-2.279.707-3.312.83-.118.014-.122.153-.005.173.912.155 2.285.365 3.017 1.097.756.756 1.039 2.385 1.288 3.598.024.12.206.111.227-.01.222-1.285.787-3.14 1.394-3.747.647-.647 2.064-.725 3.014-.956.1-.024.1-.146-.001-.166-.957-.186-2.414.02-3.222-.52-.766-.51-1-2.8-1.18-4.145-.016-.12-.168-.12-.187 0C7.128 2.576 6.813 4.587 6.3 5.1ZM3.167 8.819c-.158.157-.854.258-1.253.318-.056.009-.056.071 0 .08.342.056.898.156 1.185.442.302.3.362.926.44 1.416.01.06.09.057.099-.004.071-.506.224-1.171.466-1.412.25-.249.748-.344 1.085-.432.051-.014.049-.077-.004-.085-.356-.057-.862-.088-1.114-.34-.265-.262-.377-1.161-.446-1.497-.009-.042-.053-.047-.067-.006-.115.34-.214 1.343-.39 1.52ZM1.8 2.7c-.146.145-.577.3-.904.397-.058.017-.051.106.008.115.278.041.638.131.896.388.3.3.467.89.585 1.366.015.06.108.054.118-.007.08-.492.256-1.12.497-1.359.22-.218.615-.325.92-.38.059-.011.062-.095.004-.109-.3-.074-.707-.195-.924-.411-.242-.241-.377-.82-.475-1.242l-.002-.009c-.014-.057-.104-.056-.121 0-.136.448-.437 1.087-.602 1.25Z"></path></svg></span><span class="ToolButton_keyBinding__CxK09">CTRLJ</span></button></span></div></div></div><div data-island-index="2" class="LayerUI_toolIsland__tIdBl LayerUI_animation__nYiY4"><div data-textfield-blur-exception="true" class="Island_container__zbK0U"><div class="Stack_stack__jj1_v Stack_vertical__hHFEf" style="--gap: 0.5;"><span class="shape"><button data-testid="selection" class="ToolButton_toolButton__h19gN shape ToolButton_medium__G_ysU ToolButton_isSelected___qkCr"><span class="ToolButton_content__Mcd7f ToolButton_icon__jlZFP"><svg role="img" width="11" height="13" focusable="false" aria-hidden="true" viewBox="0 0 11 13" class=""><path fill-rule="evenodd" clip-rule="evenodd" fill="currentColor" d="M1.13179 0.269066C1.39498 0.117113 1.72385 0.139007 1.96458 0.324508L10.5455 6.93692C10.7927 7.12735 10.8961 7.4509 10.8053 7.74938C10.7144 8.04786 10.4483 8.25892 10.1369 8.27938L5.91667 8.55673L3.56634 12.0729C3.39296 12.3323 3.0771 12.4573 2.77319 12.3867C2.46928 12.3161 2.24079 12.0648 2.19943 11.7555L0.763405 1.018C0.723119 0.71678 0.868595 0.42102 1.13179 0.269066ZM2.49158 2.62431L3.42293 9.58824L4.87506 7.4158C5.00458 7.22203 5.21683 7.09948 5.4494 7.0842L8.05685 6.91284L2.49158 2.62431Z"></path></svg></span><span class="ToolButton_keyBinding__CxK09">V</span></button></span><span class="shape"><button data-testid="rectangle" class="ToolButton_toolButton__h19gN shape ToolButton_medium__G_ysU"><span class="ToolButton_content__Mcd7f ToolButton_icon__jlZFP"><svg role="img" width="12" height="12" focusable="false" aria-hidden="true" viewBox="0 0 12 12" class=""><path fill-rule="evenodd" clip-rule="evenodd" fill="currentColor" d="M1.5 1.5V10.5H10.5V1.5H1.5ZM1 0C0.447715 0 0 0.447715 0 1V11C0 11.5523 0.447715 12 1 12H11C11.5523 12 12 11.5523 12 11V1C12 0.447715 11.5523 0 11 0H1Z"></path></svg></span><span class="ToolButton_keyBinding__CxK09">R</span></button></span><span class="shape"><button data-testid="ellipse" class="ToolButton_toolButton__h19gN shape ToolButton_medium__G_ysU"><span class="ToolButton_content__Mcd7f ToolButton_icon__jlZFP"><svg role="img" width="12" height="12" focusable="false" aria-hidden="true" viewBox="0 0 12 12" class=""><path fill-rule="evenodd" clip-rule="evenodd" fill="currentColor" d="M1.5 6C1.5 8.48528 3.51472 10.5 6 10.5C8.48528 10.5 10.5 8.48528 10.5 6C10.5 3.51472 8.48528 1.5 6 1.5C3.51472 1.5 1.5 3.51472 1.5 6ZM6 0C2.68629 0 0 2.68629 0 6C0 9.31371 2.68629 12 6 12C9.31371 12 12 9.31371 12 6C12 2.68629 9.31371 0 6 0Z"></path></svg></span><span class="ToolButton_keyBinding__CxK09">O</span></button></span><span class="shape"><button data-testid="arrow" class="ToolButton_toolButton__h19gN shape ToolButton_medium__G_ysU"><span class="ToolButton_content__Mcd7f ToolButton_icon__jlZFP"><svg role="img" width="10" height="10" focusable="false" aria-hidden="true" viewBox="0 0 10 10" class=""><path fill-rule="evenodd" clip-rule="evenodd" fill="currentColor" d="M3.36165 1.06268C3.37175 0.648589 3.71562 0.32109 4.12971 0.331189L8.27134 0.432205C8.67122 0.441958 8.99307 0.763813 9.00283 1.16369L9.10384 5.30532C9.11394 5.71941 8.78644 6.06328 8.37235 6.07338C7.95826 6.08348 7.61439 5.75598 7.60429 5.34189L7.54594 2.94975L1.71231 8.78338C1.41942 9.07627 0.944545 9.07627 0.651651 8.78338C0.358758 8.49049 0.358758 8.01561 0.651651 7.72272L6.48528 1.88909L4.09314 1.83074C3.67905 1.82064 3.35155 1.47677 3.36165 1.06268Z"></path></svg></span><span class="ToolButton_keyBinding__CxK09">A</span></button></span><span class="shape"><button data-testid="line" class="ToolButton_toolButton__h19gN shape ToolButton_medium__G_ysU"><span class="ToolButton_content__Mcd7f ToolButton_icon__jlZFP"><svg role="img" width="9" height="9" focusable="false" aria-hidden="true" viewBox="0 0 9 9" class=""><path fill-rule="evenodd" clip-rule="evenodd" fill="currentColor" d="M1.18499 8.59319C0.8921 8.3003 0.916513 7.80101 1.23952 7.478L7.47801 1.23951C7.80102 0.916502 8.30031 0.892089 8.5932 1.18498C8.8861 1.47787 8.86168 1.97716 8.53867 2.30017L2.30018 8.53866C1.97717 8.86167 1.47789 8.88609 1.18499 8.59319Z"></path></svg></span><span class="ToolButton_keyBinding__CxK09">L</span></button></span><span class="shape"><button data-testid="freedraw" class="ToolButton_toolButton__h19gN shape ToolButton_medium__G_ysU"><span class="ToolButton_content__Mcd7f ToolButton_icon__jlZFP"><svg role="img" width="11" height="11" focusable="false" aria-hidden="true" viewBox="0 0 11 11" class=""><mask id="path-1-inside-1_562_2196" fill="white"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.91767 1.68578L1.68947 7.91398L1.53767 9.46233L3.08602 9.31053L9.31422 3.08233L7.91767 1.68578ZM8.61595 0.289234C8.2303 -0.0964117 7.60504 -0.0964112 7.2194 0.289234L0.51705 6.99158C0.355393 7.15324 0.254834 7.36598 0.232527 7.5935L0.00483 9.91602C-0.0558971 10.5354 0.464567 11.0559 1.08398 10.9952L3.4065 10.7675C3.63402 10.7452 3.84676 10.6446 4.00842 10.483L10.7108 3.7806C11.0964 3.39495 11.0964 2.7697 10.7108 2.38405L8.61595 0.289234Z"></path></mask><path fill="currentColor" mask="url(#path-1-inside-1_562_2196)" d="M1.68947 7.91398L0.628811 6.85332L0.249033 7.2331L0.196628 7.76762L1.68947 7.91398ZM7.91767 1.68578L8.97833 0.62512L7.91767 -0.43554L6.85701 0.62512L7.91767 1.68578ZM1.53767 9.46233L0.0448302 9.31597L-0.133343 11.1333L1.68403 10.9552L1.53767 9.46233ZM3.08602 9.31053L3.23237 10.8034L3.7669 10.751L4.14668 10.3712L3.08602 9.31053ZM9.31422 3.08233L10.3749 4.14299L11.4355 3.08233L10.3749 2.02167L9.31422 3.08233ZM7.2194 0.289234L8.28006 1.34989L7.2194 0.289234ZM8.61595 0.289234L7.55529 1.34989V1.34989L8.61595 0.289234ZM0.51705 6.99158L-0.54361 5.93092L0.51705 6.99158ZM0.232527 7.5935L1.72537 7.73986L0.232527 7.5935ZM0.00483 9.91602L1.49767 10.0624L1.49767 10.0624L0.00483 9.91602ZM1.08398 10.9952L1.23034 12.488H1.23034L1.08398 10.9952ZM3.4065 10.7675L3.26014 9.27463H3.26014L3.4065 10.7675ZM10.7108 2.38405L11.7714 1.32339L11.7714 1.32339L10.7108 2.38405ZM2.75013 8.97464L8.97833 2.74644L6.85701 0.62512L0.628811 6.85332L2.75013 8.97464ZM3.03052 9.60868L3.18231 8.06034L0.196628 7.76762L0.0448302 9.31597L3.03052 9.60868ZM2.93966 7.81769L1.39132 7.96948L1.68403 10.9552L3.23237 10.8034L2.93966 7.81769ZM8.25356 2.02167L2.02536 8.24987L4.14668 10.3712L10.3749 4.14299L8.25356 2.02167ZM6.85701 2.74644L8.25356 4.14299L10.3749 2.02167L8.97833 0.62512L6.85701 2.74644ZM8.28006 1.34989C8.07992 1.55003 7.75543 1.55004 7.55529 1.34989L9.67661 -0.771426C8.70517 -1.74286 7.13017 -1.74286 6.15874 -0.771426L8.28006 1.34989ZM1.57771 8.05224L8.28006 1.34989L6.15874 -0.771426L-0.54361 5.93092L1.57771 8.05224ZM1.72537 7.73986C1.71379 7.85794 1.66161 7.96835 1.57771 8.05224L-0.54361 5.93092C-0.95082 6.33813 -1.20413 6.87402 -1.26032 7.44715L1.72537 7.73986ZM1.49767 10.0624L1.72537 7.73986L-1.26032 7.44715L-1.48801 9.76966L1.49767 10.0624ZM0.937622 9.50233C1.25908 9.47081 1.52919 9.74092 1.49767 10.0624L-1.48801 9.76966C-1.64098 11.3299 -0.329944 12.641 1.23034 12.488L0.937622 9.50233ZM3.26014 9.27463L0.937621 9.50233L1.23034 12.488L3.55285 12.2603L3.26014 9.27463ZM2.94776 9.42229C3.03165 9.33839 3.14206 9.28621 3.26014 9.27463L3.55285 12.2603C4.12599 12.2041 4.66187 11.9508 5.06908 11.5436L2.94776 9.42229ZM9.65011 2.71994L2.94776 9.42229L5.06908 11.5436L11.7714 4.84126L9.65011 2.71994ZM9.65011 3.44471C9.44996 3.24457 9.44996 2.92008 9.65011 2.71994L11.7714 4.84126C12.7429 3.86983 12.7429 2.29483 11.7714 1.32339L9.65011 3.44471ZM7.55529 1.34989L9.65011 3.44471L11.7714 1.32339L9.67661 -0.771426L7.55529 1.34989Z"></path></svg></span><span class="ToolButton_keyBinding__CxK09">D</span></button></span><span class="shape"><button data-testid="text" class="ToolButton_toolButton__h19gN shape ToolButton_medium__G_ysU"><span class="ToolButton_content__Mcd7f ToolButton_icon__jlZFP"><svg role="img" width="13" height="9" focusable="false" aria-hidden="true" viewBox="0 0 13 9" class=""><path fill-rule="evenodd" clip-rule="evenodd" fill="currentColor" d="M5.75 0C5.33579 0 5 0.335786 5 0.75C5 1.16421 5.33579 1.5 5.75 1.5H8V7.75C8 8.16421 8.33579 8.5 8.75 8.5C9.16421 8.5 9.5 8.16421 9.5 7.75V1.5H11.75C12.1642 1.5 12.5 1.16421 12.5 0.75C12.5 0.335786 12.1642 0 11.75 0H5.75ZM0.75 3C0.335786 3 0 3.33579 0 3.75C0 4.16421 0.335786 4.5 0.75 4.5H2V7.75C2 8.16421 2.33579 8.5 2.75 8.5C3.16421 8.5 3.5 8.16421 3.5 7.75V4.5H4.75C5.16421 4.5 5.5 4.16421 5.5 3.75C5.5 3.33579 5.16421 3 4.75 3H0.75Z"></path></svg></span><span class="ToolButton_keyBinding__CxK09">T</span></button></span><div><span class="shape"><button aria-label="Icon" aria-keyshortcuts="I" data-testid="icon-button" class="ToolButton_toolButton__h19gN shape ToolButton_medium__G_ysU"><span class="ToolButton_content__Mcd7f ToolButton_icon__jlZFP"><svg role="img" width="21" height="21" focusable="false" aria-hidden="true" viewBox="0 0 21 21" class=""><path id="Union" fill-rule="evenodd" clip-rule="evenodd" d="M5.75034 1.16663C5.98297 1.16663 6.19464 1.3011 6.29348 1.51168L7.31115 3.6798L9.57424 4.02534C9.79656 4.05928 9.98123 4.21471 10.0526 4.42797C10.124 4.64123 10.0702 4.87651 9.91312 5.03748L8.25794 6.73388L8.2927 6.94694C7.8911 7.14128 7.52276 7.39355 7.19854 7.69289L7.02484 6.62823C6.99417 6.44027 7.05456 6.24891 7.18756 6.1126L8.23866 5.03532L6.8135 4.81772C6.61568 4.78751 6.44595 4.66068 6.36092 4.47953L5.75034 3.17872L5.13976 4.47953C5.05474 4.66068 4.885 4.78751 4.68718 4.81772L3.26202 5.03532L4.31312 6.1126C4.44612 6.24891 4.50651 6.44027 4.47584 6.62823L4.23403 8.11037L5.46006 7.43262C5.6407 7.33276 5.85998 7.33276 6.04062 7.43262L6.95341 7.93721C6.67952 8.23191 6.44466 8.56339 6.25706 8.92342L5.75034 8.6433L3.73318 9.7584C3.53208 9.86956 3.28517 9.85612 3.09733 9.72378C2.90949 9.59145 2.81373 9.36346 2.85073 9.13668L3.24274 6.73388L1.58756 5.03748C1.4305 4.87651 1.37665 4.64123 1.44805 4.42797C1.51946 4.21471 1.70412 4.05928 1.92644 4.02534L4.18953 3.6798L5.2072 1.51168C5.30604 1.3011 5.51771 1.16663 5.75034 1.16663ZM11.5502 7.19997C9.28588 7.19997 7.45024 9.0356 7.45024 11.3C7.45024 13.5643 9.28588 15.4 11.5502 15.4C12.466 15.4 13.3116 15.0997 13.9941 14.5923L16.026 16.6242L16.8745 15.7757L14.8426 13.7438C15.35 13.0614 15.6502 12.2157 15.6502 11.3C15.6502 9.0356 13.8146 7.19997 11.5502 7.19997ZM8.65024 11.3C8.65024 9.69834 9.94862 8.39997 11.5502 8.39997C13.1519 8.39997 14.4502 9.69834 14.4502 11.3C14.4502 12.9016 13.1519 14.2 11.5502 14.2C9.94862 14.2 8.65024 12.9016 8.65024 11.3Z" fill="currentColor"></path></svg></span><span class="ToolButton_keyBinding__CxK09">I</span></button></span></div></div></div></div><div data-island-index="3" class="LayerUI_toolIsland__tIdBl LayerUI_animation__nYiY4"><div data-textfield-blur-exception="true" class="Island_container__zbK0U"><div class="Stack_stack__jj1_v Stack_vertical__hHFEf" style="--gap: 0.5;"><span class="shape"><button data-testid="figure" class="ToolButton_toolButton__h19gN shape ToolButton_medium__G_ysU"><span class="ToolButton_content__Mcd7f ToolButton_icon__jlZFP"><svg role="img" width="12" height="11" focusable="false" aria-hidden="true" viewBox="0 0 12 11" class=""><path fill="none" stroke-width="1.5" stroke="currentColor" d="M3.375 0.75H1.5C1.08579 0.75 0.75 1.05381 0.75 1.42857V3.125M4.875 0.75H7.125M8.625 0.75H10.5C10.9142 0.75 11.25 1.05381 11.25 1.42857V3.125M0.75 4.48214V6.51786M11.25 4.48214V6.51786M0.75 7.875V9.57143C0.75 9.94619 1.08579 10.25 1.5 10.25H3.375M11.25 7.875V9.57143C11.25 9.94619 10.9142 10.25 10.5 10.25H8.625M4.875 10.25H7.125"></path></svg></span><span class="ToolButton_keyBinding__CxK09">F</span></button></span><span class="shape"><button data-testid="comment" class="ToolButton_toolButton__h19gN shape ToolButton_medium__G_ysU"><span class="ToolButton_content__Mcd7f ToolButton_icon__jlZFP"><svg role="img" width="14" height="14" focusable="false" aria-hidden="true" viewBox="0 0 14 14" class=""><path fill="currentColor" d="M3.58686 10.4074H4.33686V9.65738H3.58686V10.4074ZM3.58686 12.9657H2.83686C2.83686 13.2497 2.99731 13.5094 3.25134 13.6365C3.50537 13.7635 3.80939 13.7362 4.03667 13.5658L3.58686 12.9657ZM7.00019 10.4074V9.65738H6.75032L6.55038 9.80723L7.00019 10.4074ZM2.83686 10.4074V12.9657H4.33686V10.4074H2.83686ZM4.03667 13.5658L7.45 11.0075L6.55038 9.80723L3.13704 12.3656L4.03667 13.5658ZM7.00019 11.1574H12.1202V9.65738H7.00019V11.1574ZM12.1202 11.1574C13.0058 11.1574 13.7235 10.4409 13.7235 9.55462H12.2235C12.2235 9.61151 12.1783 9.65738 12.1202 9.65738V11.1574ZM13.7235 9.55462V1.87962H12.2235V9.55462H13.7235ZM13.7235 1.87962C13.7235 0.993337 13.0058 0.276855 12.1202 0.276855V1.77686C12.1783 1.77686 12.2235 1.82272 12.2235 1.87962H13.7235ZM12.1202 0.276855H1.88019V1.77686H12.1202V0.276855ZM1.88019 0.276855C0.994562 0.276855 0.276855 0.993336 0.276855 1.87962H1.77686C1.77686 1.82272 1.82203 1.77686 1.88019 1.77686V0.276855ZM0.276855 1.87962V9.55462H1.77686V1.87962H0.276855ZM0.276855 9.55462C0.276855 10.4409 0.994562 11.1574 1.88019 11.1574V9.65738C1.82203 9.65738 1.77686 9.61151 1.77686 9.55462H0.276855ZM1.88019 11.1574H3.58686V9.65738H1.88019V11.1574Z"></path></svg></span><span class="ToolButton_keyBinding__CxK09">C</span></button></span></div></div></div></section></div></div><div class="ZoomControls_zoomControls__Wg0rc" style=""><span role="button" tabindex="0" class="Popup_toggler__V5BaU ZoomControls_toggle__o_QE2">48% <svg xmlns="http://www.w3.org/2000/svg" width="5" height="5" viewBox="0 0 5 3"><path fill="currentColor" d="m.206 1.117 1.805 1.692c.272.255.71.255.983 0l1.804-1.692C5.23.705 4.924 0 4.303 0H.701C.074 0-.233.705.206 1.117"></path></svg></span></div></div><div id="text-editor-root"></div><main id="excalidraw-cursor-element" style="position: relative; overflow: hidden; cursor: url(&quot;data:image/svg+xml;base64,CiAgPHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIHZpZXdCb3g9IjAgMCAzMCAzMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxnIGZpbHRlcj0idXJsKCNmaWx0ZXIwX2RfMTE2OF81MDQ1MSkiPgogICAgICA8cGF0aCBkPSJNOCA1TDIyIDE4SDEzLjVMOCAyNVY1WiIgZmlsbD0iYmxhY2siLz4KICAgICAgPHBhdGggZD0iTTguNSAyMy41NTQzVjYuMTQ2NjFMMjAuNzI2NyAxNy41SDEzLjVIMTMuMjU3TDEzLjEwNjggMTcuNjkxMUw4LjUgMjMuNTU0M1oiIHN0cm9rZT0id2hpdGUiLz4KICAgIDwvZz4KICAgIDxkZWZzPgogICAgICA8ZmlsdGVyIGlkPSJmaWx0ZXIwX2RfMTE2OF81MDQ1MSIgeD0iNiIgeT0iNCIgd2lkdGg9IjE4IiBoZWlnaHQ9IjI0IiBmaWx0ZXJVbml0cz0idXNlclNwYWNlT25Vc2UiIGNvbG9yLWludGVycG9sYXRpb24tZmlsdGVycz0ic1JHQiI+CiAgICAgICAgPGZlRmxvb2QgZmxvb2Qtb3BhY2l0eT0iMCIgcmVzdWx0PSJCYWNrZ3JvdW5kSW1hZ2VGaXgiLz4KICAgICAgICA8ZmVDb2xvck1hdHJpeCBpbj0iU291cmNlQWxwaGEiIHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAxMjcgMCIgcmVzdWx0PSJoYXJkQWxwaGEiLz4KICAgICAgICA8ZmVPZmZzZXQgZHk9IjEiLz4KICAgICAgICA8ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSIxIi8+CiAgICAgICAgPGZlQ29tcG9zaXRlIGluMj0iaGFyZEFscGhhIiBvcGVyYXRvcj0ib3V0Ii8+CiAgICAgICAgPGZlQ29sb3JNYXRyaXggdHlwZT0ibWF0cml4IiB2YWx1ZXM9IjAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAuNCAwIi8+CiAgICAgICAgPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbjI9IkJhY2tncm91bmRJbWFnZUZpeCIgcmVzdWx0PSJlZmZlY3QxX2Ryb3BTaGFkb3dfMTE2OF81MDQ1MSIvPgogICAgICAgIDxmZUJsZW5kIG1vZGU9Im5vcm1hbCIgaW49IlNvdXJjZUdyYXBoaWMiIGluMj0iZWZmZWN0MV9kcm9wU2hhZG93XzExNjhfNTA0NTEiIHJlc3VsdD0ic2hhcGUiLz4KICAgICAgPC9maWx0ZXI+CiAgICA8L2RlZnM+CiAgPC9zdmc+Cg==&quot;) 8 5, auto;"><canvas id="excalidraw-render-canvas" width="1887.984375" height="667.5" style="width: 1258.66px; height: 445px; position: relative;">Drawing canvas</canvas><canvas id="animation-render-canvas" width="1887.984375" height="667.5" style="width: 1258.66px; height: 445px; position: absolute; top: 0px; left: 0px;"></canvas><canvas id="excalidraw-main-canvas" width="1887.984375" height="667.5" style="width: 1258.66px; height: 445px; position: absolute; top: 0px; left: 0px;"></canvas></main><div class="CanvasUI_smartDuplicationUIContainer__yOkmO"></div><div style="position: fixed; inset: 0px; z-index: 2; pointer-events: none; clip-path: polygon(10.6667px 95.6667px, 1269.32px 95.6667px, 1269.32px 540.667px, 10.6667px 540.667px);"></div><div id="measurer-textbox-no-element" class="textEditorWrapper" style="visibility: hidden; position: fixed; top: -10000px; left: -10000px; box-sizing: border-box; font-kerning: auto;"><div contenteditable="false" class="textMeasurerEditor" style="width: 100%; height: 100%; display: block; user-select: none; pointer-events: none; white-space: pre-wrap; word-break: break-word; align-self: flex-start; font-size: 20px; font-family: EraserNimbusSansFerrule, &quot;Segoe UI Emoji&quot;, FreeSans, &quot;Free Sans&quot;, &quot;WenQuanYi Zen Hei&quot;; top: 0.666666px; text-align: center; padding-bottom: 0px; line-height: 1; max-width: none; color: rgb(28, 28, 28); transform: scale(0.875);"><div role="textbox" aria-multiline="true" spellcheck="false" class="textMeasurerEditor" data-slate-editor="true" data-slate-editor-id="1335" data-slate-node="value" contenteditable="true" zindex="-1"><p data-slate-node="element" id="VrjwzIN4Ed5tyFDgy6UPP"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-string="true">event loop just pick the function from the que and execute and some time the brower or env take some time mean while it chcek the call stack and excute the functio</span></span></span></p></div></div></div><div id="measurer-textbox-XGZpPENMVEuD7tzIikY2N" class="textEditorWrapper" style="visibility: visible; position: fixed; top: -10000px; left: -10000px; box-sizing: border-box; font-kerning: auto; width: 156.571px;"><div contenteditable="false" class="textMeasurerEditor" style="width: 100%; height: 100%; display: block; user-select: none; pointer-events: none; white-space: pre-wrap; word-break: break-word; align-self: flex-start; font-size: 20px; font-family: EraserNimbusSansFerrule, &quot;Segoe UI Emoji&quot;, FreeSans, &quot;Free Sans&quot;, &quot;WenQuanYi Zen Hei&quot;; top: 0.666666px; text-align: center; padding-bottom: 0px; line-height: 1; max-width: none; color: rgb(28, 28, 28); transform: scale(0.875);"><div role="textbox" aria-multiline="true" spellcheck="false" class="textMeasurerEditor" data-slate-editor="true" data-slate-editor-id="779" data-slate-node="value" contenteditable="true" zindex="-1"><p data-slate-node="element" id="47deTHhFdPdGTgCJ-GzTO"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-string="true">event loop</span></span></span></p><p data-slate-node="element" id="47deTHhFdPdGTgCJ-GzTO"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></p><p data-slate-node="element" id="47deTHhFdPdGTgCJ-GzTO"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-string="true">mean whiel event llop chek and execute the next fun(fn)</span></span></span></p></div></div></div><div id="measurer-textbox-_hThIHwI3L2pcJ0l8kDSP" class="textEditorWrapper" style="visibility: visible; position: fixed; top: -10000px; left: -10000px; box-sizing: border-box; font-kerning: auto; width: 271.229px;"><div contenteditable="false" class="textMeasurerEditor" style="width: 100%; height: 100%; display: block; user-select: none; pointer-events: none; white-space: pre-wrap; word-break: break-word; align-self: flex-start; font-size: 20px; font-family: EraserNimbusSansFerrule, &quot;Segoe UI Emoji&quot;, FreeSans, &quot;Free Sans&quot;, &quot;WenQuanYi Zen Hei&quot;; top: 0.666666px; text-align: center; padding-bottom: 0px; line-height: 1; max-width: none; color: rgb(28, 28, 28); transform: scale(0.875);"><div role="textbox" aria-multiline="true" spellcheck="false" class="textMeasurerEditor" data-slate-editor="true" data-slate-editor-id="650" data-slate-node="value" contenteditable="true" zindex="-1"><p data-slate-node="element" id="tZKYWHCQSHxXGFsZJQyNn"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-string="true">and it goes to que</span></span></span></p></div></div></div><div id="measurer-textbox-acCky1jx6WZZyfXvEBwlQ" class="textEditorWrapper" style="visibility: visible; position: fixed; top: -10000px; left: -10000px; box-sizing: border-box; font-kerning: auto; width: 191.229px;"><div contenteditable="false" class="textMeasurerEditor" style="width: 100%; height: 100%; display: block; user-select: none; pointer-events: none; white-space: pre-wrap; word-break: break-word; align-self: flex-start; font-size: 20px; font-family: EraserNimbusSansFerrule, &quot;Segoe UI Emoji&quot;, FreeSans, &quot;Free Sans&quot;, &quot;WenQuanYi Zen Hei&quot;; top: 0.666666px; text-align: center; padding-bottom: 0px; line-height: 1; max-width: none; color: rgb(28, 28, 28); transform: scale(0.875);"><div role="textbox" aria-multiline="true" spellcheck="false" class="textMeasurerEditor" data-slate-editor="true" data-slate-editor-id="409" data-slate-node="value" contenteditable="true" zindex="-1"><p data-slate-node="element" id="pTKSfSSwiYP9oH9P5aiUP"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-string="true">call stack(where the every function got loadh here to excute)</span></span></span></p><p data-slate-node="element" id="pTKSfSSwiYP9oH9P5aiUP"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></p><p data-slate-node="element" id="pTKSfSSwiYP9oH9P5aiUP"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></p><p data-slate-node="element" id="pTKSfSSwiYP9oH9P5aiUP"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></p><p data-slate-node="element" id="pTKSfSSwiYP9oH9P5aiUP"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-string="true">fn</span></span></span></p></div></div></div><div id="measurer-textbox-pxYdbbjuXh2Ils9-3PNVk" class="textEditorWrapper" style="visibility: visible; position: fixed; top: -10000px; left: -10000px; box-sizing: border-box; font-kerning: auto; width: 192px;"><div contenteditable="false" class="textMeasurerEditor" style="width: 100%; height: 100%; display: block; user-select: none; pointer-events: none; white-space: pre-wrap; word-break: break-word; align-self: flex-start; font-size: 20px; font-family: EraserNimbusSansFerrule, &quot;Segoe UI Emoji&quot;, FreeSans, &quot;Free Sans&quot;, &quot;WenQuanYi Zen Hei&quot;; top: 0.666666px; text-align: center; padding-bottom: 0px; line-height: 1; max-width: none; color: rgb(28, 28, 28); transform: scale(0.875);"><div role="textbox" aria-multiline="true" spellcheck="false" class="textMeasurerEditor" data-slate-editor="true" data-slate-editor-id="599" data-slate-node="value" contenteditable="true" zindex="-1"><p data-slate-node="element" id="pTKSfSSwiYP9oH9P5aiUP"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-string="true">node/browers/dino(envwhere the js got excuted)</span></span></span></p><p data-slate-node="element" id="pTKSfSSwiYP9oH9P5aiUP"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></p><p data-slate-node="element" id="pTKSfSSwiYP9oH9P5aiUP"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></p><p data-slate-node="element" id="pTKSfSSwiYP9oH9P5aiUP"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></p><p data-slate-node="element" id="pTKSfSSwiYP9oH9P5aiUP"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-string="true">first function exectued and takeing some time</span></span></span></p></div></div></div><div id="measurer-textbox-FfeVlNxLfFCzYdVC9Eltj" class="textEditorWrapper" style="visibility: visible; position: fixed; top: -10000px; left: -10000px; box-sizing: border-box; font-kerning: auto; width: 444.375px;"><div contenteditable="false" class="textMeasurerEditor" style="width: 100%; height: 100%; display: block; user-select: none; pointer-events: none; white-space: pre-wrap; word-break: break-word; align-self: flex-start; font-size: 20px; font-family: EraserNimbusSansFerrule, &quot;Segoe UI Emoji&quot;, FreeSans, &quot;Free Sans&quot;, &quot;WenQuanYi Zen Hei&quot;; top: 0.666666px; text-align: center; padding-bottom: 0px; line-height: 1; max-width: none; color: rgb(28, 28, 28); transform: scale(0.875);"><div role="textbox" aria-multiline="true" spellcheck="false" class="textMeasurerEditor" data-slate-editor="true" data-slate-editor-id="1337" data-slate-node="value" contenteditable="true" zindex="-1"><p data-slate-node="element" id="VrjwzIN4Ed5tyFDgy6UPP"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-string="true">event loop just pick the function from the que and execute and some time the brower or env take some time mean while it chcek the call stack and excute the function</span></span></span></p></div></div></div></div></div><button data-testid="help-center" class="Button_button__fNS_E Button_light__p9Dmo Button_small__rvXZZ HelpCenter_helpButton__MNdc7 HelpCenter_container__Mzr5Z HelpCenter_stickyRight__eGxTp">?</button></div></div></div></div></div><style>
+      body {
+        overflow: hidden;
+      }
+    </style></div><div style="position:fixed;z-index:9999;top:16px;left:16px;right:16px;bottom:16px;pointer-events:none"></div></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"og":{"type":"website","title":"Eraser — Sign In","description":"Sign in to create diagrams, wireframes, technical specs with your team.","images":[{"url":"https://app.eraser.io/_next/static/images/eraser-og-ai-5f2e6c94f2dfe2392c4b5207b91a5181.png","width":1200,"height":630,"alt":"Eraser"}]}},"__N_SSP":true},"page":"/auth/sign-in","query":{"ref":"website"},"buildId":"D7umDKa0U3uvwj7IuRWkM","isFallback":false,"gssp":true,"scriptLoader":[]}</script><next-route-announcer><p aria-live="assertive" id="__next-route-announcer__" role="alert" style="border: 0px; clip: rect(0px, 0px, 0px, 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;">Eraser</p></next-route-announcer><script src="./Java Script Event Loop — Eraser_files/new-f3a1d7bf860cb833.js.download"></script><script src="./Java Script Event Loop — Eraser_files/survey-1830aa5cad8703dd.js.download"></script><script src="./Java Script Event Loop — Eraser_files/join-a4dcb36be3c06995.js.download"></script><script src="./Java Script Event Loop — Eraser_files/create-37397610c388c8a1.js.download"></script><script src="./Java Script Event Loop — Eraser_files/1498-29eea25636575458.js.download"></script><script src="./Java Script Event Loop — Eraser_files/2702-fe92ea9d0f59b881.js.download"></script><script src="./Java Script Event Loop — Eraser_files/42-e730f5d6c840cfa9.js.download"></script><script src="./Java Script Event Loop — Eraser_files/8933-562563391353560c.js.download"></script><script src="./Java Script Event Loop — Eraser_files/all-8a661cd4aa48f759.js.download"></script><iframe id="intercom-frame" style="position: absolute !important; opacity: 0 !important; width: 1px !important; height: 1px !important; top: 0 !important; left: 0 !important; border: none !important; display: block !important; z-index: -1 !important; pointer-events: none;" aria-hidden="true" tabindex="-1" title="Intercom" src="./Java Script Event Loop — Eraser_files/saved_resource.html"></iframe><div class="intercom-lightweight-app"><style id="intercom-lightweight-app-style" type="text/css">
+  @keyframes intercom-lightweight-app-launcher {
+    from {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes intercom-lightweight-app-gradient {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes intercom-lightweight-app-messenger {
+    0% {
+      opacity: 0;
+      transform: scale(0);
+    }
+    40% {
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .intercom-lightweight-app {
+    position: fixed;
+    z-index: 2147483001;
+    width: 0;
+    height: 0;
+    font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  }
+
+  .intercom-lightweight-app-gradient {
+    position: fixed;
+    z-index: 2147483002;
+    width: 500px;
+    height: 500px;
+    bottom: 0;
+    right: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse at bottom right,
+      rgba(29, 39, 54, 0.16) 0%,
+      rgba(29, 39, 54, 0) 72%);
+    animation: intercom-lightweight-app-gradient 200ms ease-out;
+  }
+
+  .intercom-lightweight-app-launcher {
+    position: fixed;
+    z-index: 2147483003;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none;
+    bottom: 20px;
+    right: 20px;
+    max-width: 48px;
+    width: 48px;
+    max-height: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #2392ec;
+    cursor: pointer;
+    box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.06), 0 2px 32px 0 rgba(0, 0, 0, 0.16);
+    transition: transform 167ms cubic-bezier(0.33, 0.00, 0.00, 1.00);
+    box-sizing: content-box;
+  }
+
+
+  .intercom-lightweight-app-launcher:hover {
+    transition: transform 250ms cubic-bezier(0.33, 0.00, 0.00, 1.00);
+    transform: scale(1.1)
+  }
+
+  .intercom-lightweight-app-launcher:active {
+    transform: scale(0.85);
+    transition: transform 134ms cubic-bezier(0.45, 0, 0.2, 1);
+  }
+
+
+  .intercom-lightweight-app-launcher:focus {
+    outline: none;
+
+    
+  }
+
+  .intercom-lightweight-app-launcher-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 48px;
+    height: 48px;
+    transition: transform 100ms linear, opacity 80ms linear;
+  }
+
+  .intercom-lightweight-app-launcher-icon-open {
+    
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+      
+  }
+
+  .intercom-lightweight-app-launcher-icon-open svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .intercom-lightweight-app-launcher-icon-open svg path {
+    fill: rgb(255, 255, 255);
+  }
+
+  .intercom-lightweight-app-launcher-icon-self-serve {
+    
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+      
+  }
+
+  .intercom-lightweight-app-launcher-icon-self-serve svg {
+    height: 44px;
+  }
+
+  .intercom-lightweight-app-launcher-icon-self-serve svg path {
+    fill: rgb(255, 255, 255);
+  }
+
+  .intercom-lightweight-app-launcher-custom-icon-open {
+    max-height: 24px;
+    max-width: 24px;
+
+    
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+      
+  }
+
+  .intercom-lightweight-app-launcher-icon-minimize {
+    
+        opacity: 0;
+        transform: rotate(-60deg) scale(0);
+      
+  }
+
+  .intercom-lightweight-app-launcher-icon-minimize svg path {
+    fill: rgb(255, 255, 255);
+  }
+
+  /* Extended launcher styles */
+  .intercom-lightweight-app-launcher.intercom-launcher-extended {
+    width: calc(180px - 30px);
+    max-width: calc(180px - 30px);
+    height: calc(45px - 26px);
+    max-height: calc(45px - 26px);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 12px 16px 12px 12px !important;
+    gap: 6px;
+    /* Use theme background instead of hardcoded gradient */
+    background: #2392ec;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0px -2px 50px rgba(0, 0, 0, 0.1);
+    
+  }
+
+  .intercom-lightweight-app-launcher.intercom-launcher-extended .intercom-lightweight-app-launcher-icon {
+    position: relative;
+    width: 24px;
+    height: 24px;
+  }
+
+  .intercom-lightweight-app-launcher-text {
+    /* Match text color with launcher icon */
+    color: rgb(255, 255, 255);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px;
+    opacity: 1;
+    transition: opacity 80ms linear;
+  }
+
+  .intercom-lightweight-app-messenger {
+    position: fixed;
+    z-index: 2147483003;
+    overflow: hidden;
+    background-color: #ffffff;
+    animation: intercom-lightweight-app-messenger 250ms cubic-bezier(0, 1, 1, 1);
+    transform-origin: bottom right;
+
+    
+        width: 400px;
+        height: calc(100% - 40px);
+        max-height: 704px;
+        min-height: 250px;
+        right: 20px;
+        bottom: 20px;
+        box-shadow: 0 5px 40px rgba(0,0,0,0.16);
+      
+
+    border-radius: 24px;
+  }
+
+  .intercom-lightweight-app-messenger-header {
+    height: 64px;
+    border-bottom: none;
+    background: #ffffff;
+  }
+
+  .intercom-lightweight-app-messenger-footer{
+    position:absolute;
+    bottom:0;
+    width: 100%;
+    height: 80px;
+    background: #ffffff;
+    font-size: 14px;
+    line-height: 21px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.05);
+  }
+
+  @media print {
+    .intercom-lightweight-app {
+      display: none;
+    }
+  }
+</style></div><script src="./Java Script Event Loop — Eraser_files/6599-1accf181d5d00f3e.js.download"></script><script src="./Java Script Event Loop — Eraser_files/[workspaceId]-0f009e7334334c5b.js.download"></script><div style="position: absolute; left: -10000px; top: 0px; visibility: hidden; white-space: nowrap; line-height: normal;"></div></body></html>
