@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      /*1.univeral selector */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /*2. type selector */
+      p {
+        font-size: 15px;
+        margin-bottom: 10px;
+        padding: 1px 2px 3px 4px;
+      }
+      /* 3.clss selector */
+      .highlight {
+        background-color: #1b1b6b;
+      }
+
+      /* 4.id selector */
+      #header {
+        background-color: #28ae93;
+      }
+
+      /* 5.attribute selector */
+
+      input[type="text"] {
+        border: 10px solid #003a2f;
+      }
+      /*6.decendent selector */
+
+      article p {
+        color: white;
+        background-color: black;
+        padding: 10px;
+      }
+
+      div p {
+        background-color: red;
+      }
+
+      /* 7.child selector */
+      div > p {
+        color: #003a2f;
+        background-color: bisque;
+      }
+
+      /* 8.adject sbling selector */
+      h1 + p {
+        color: #28ae93;
+        font-weight: bold;
+      }
+
+      /* 9.general sbiling */
+
+      h2 ~ p {
+        color: aqua;
+      }
+
+      /* 10 psuedo selector class */
+      a:hover {
+        background-color: green;
+        padding: 10px;
+        text-decoration: none;
+        color: #1a1a1a;
+      }
+
+      /* 11 psuedo element selector class */
+
+      p::first-letter {
+        font-weight: bold;
+        font-size: 30px;
+      }
+
+      /* 12 grouping selector */
+
+      h1,
+      h2,
+      h3 {
+        color: orange;
+      }
+    </style>
+  </head>
+  <body>
+    <header id="header">This is the header</header>
+
+    <h1>Main Heading</h1>
+    <p>
+      This paragraph is the adjcent to h1 the paragraph demonstrate the adjacent
+      to sbiling selctor
+    </p>
+
+    <p>This is the regular paragraph showing the type selector</p>
+
+    <p class="highlight">
+      this paragraph has the highlight class showing the class selctor
+    </p>
+
+    <input type="text" placeholder="entre the text here" />
+
+    <article>
+      <p>this is p is the decendent which under the artcle</p>
+      <p>this is p is the decendent which under the artcle</p>
+      <div>
+        <p>this is p is the decendent which under the artcle</p>
+      </div>
+    </article>
+
+    <div>
+      <p>i am child</p>
+      <p>i am child</p>
+      <section>
+        <p>i am a decesendent</p>
+      </section>
+      <p>i am child</p>
+    </div>
+
+    <h2>the sub heading</h2>
+
+    <a href="#">hover me the to see the psudo class selector in action</a>
+    <p>
+      this is the paragraph demonstrate the psedo class element selector with
+      styled first line with first letter
+    </p>
+
+    <h3>heading 3</h3>
+    <p>the heading h1,h2,h3 font family</p>
+  </body>
+</html>

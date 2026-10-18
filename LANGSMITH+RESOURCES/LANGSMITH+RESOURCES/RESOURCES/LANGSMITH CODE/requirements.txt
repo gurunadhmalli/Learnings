@@ -1,0 +1,30 @@
+# langchain specific
+
+langchain
+langchain-text-splitters
+langchain-community
+langchain-openai  
+langchain-groq  
+langchain-google-genai
+
+# observe
+
+langsmith
+
+
+python-dotenv
+
+# vec db
+faiss-cpu
+
+# agentic flows
+langgraph
+langgraph-cli[inmem]
+
+# ui
+streamlit
+
+openai
+
+# jupyter notebook
+ipykernel

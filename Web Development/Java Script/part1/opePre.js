@@ -1,0 +1,3 @@
+let add = -1 + 2 + (3 * 40 - 1);
+
+console.log(add);
